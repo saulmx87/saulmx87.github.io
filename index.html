@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MexWeb | Tecnología x86 y Software Libre</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .tech-gradient { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-hover:hover { border-color: #38bdf8; transform: translateY(-5px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body>
+    <nav class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <h1 class="text-2xl font-bold tech-gradient tracking-tighter">MEXWEB.ME</h1>
+        <div class="hidden md:flex space-x-8 font-medium">
+            <a href="https://radio.mexweb.me" class="hover:text-sky-400 transition">Radio Stream</a>
+            <a href="https://nas.mexweb.me" class="hover:text-sky-400 transition">Cloud NAS</a>
+            <a href="https://terminal.mexweb.me" class="hover:text-sky-400 transition">Terminal</a>
+        </div>
+    </nav>
+
+    <header class="py-24 px-6 text-center">
+        <div class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-sky-400 uppercase bg-sky-400/10 rounded-full">
+            Servidor x86 Personal Online
+        </div>
+        <h2 class="text-6xl font-extrabold mb-6 leading-tight">El futuro de la <span class="tech-gradient">Tecnología</span> en tus manos</h2>
+        <p class="text-slate-400 text-xl max-w-2xl mx-auto leading-relaxed">
+            Explorando sistemas antiX, optimización de hardware x86 y servicios auto-hospedados.
+        </p>
+    </header>
+
+    <section class="max-w-6xl mx-auto px-6 mb-24">
+        <h3 class="text-2xl font-bold mb-8 text-center">Mis Servicios Locales</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="https://radio.mexweb.me" class="card-hover bg-slate-800/40 p-8 rounded-2xl border border-slate-700 block">
+                <div class="text-3xl mb-4">📻</div>
+                <h4 class="text-xl font-bold">Radio Server</h4>
+                <p class="text-slate-400 mt-2 text-sm">Streaming de audio desde mi servidor personal.</p>
+            </a>
+            <a href="https://nas.mexweb.me" class="card-hover bg-slate-800/40 p-8 rounded-2xl border border-slate-700 block">
+                <div class="text-3xl mb-4">📂</div>
+                <h4 class="text-xl font-bold">File Manager</h4>
+                <p class="text-slate-400 mt-2 text-sm">Acceso remoto a mis archivos en el NAS personal.</p>
+            </a>
+            <div class="card-hover bg-slate-800/40 p-8 rounded-2xl border border-slate-700">
+                <div class="text-3xl mb-4">💻</div>
+                <h4 class="text-xl font-bold">Tech Blog</h4>
+                <p class="text-slate-400 mt-2 text-sm">Artículos sobre Linux, antiX y hardware antiguo.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-slate-800 text-center text-slate-500">
+        <p class="mb-2">© 2025 MexWeb - Desarrollado por saulmx87</p>
+        <p class="text-xs uppercase tracking-widest">Alojado en GitHub Pages | Túneles via Cloudflare</p>
+    </footer>
+</body>
+</html>
