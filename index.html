@@ -129,6 +129,8 @@
       <button onclick="switchTab('mikrotik')" id="tab-btn-mikrotik" class="nav-btn text-lg font-bold px-4 py-2">MIKROTIK</button>
       <button onclick="switchTab('iot')" id="tab-btn-iot" class="nav-btn text-lg font-bold px-4 py-2">IoT / ESP32</button>
       <button onclick="switchTab('sysadmin')" id="tab-btn-sysadmin" class="nav-btn text-lg font-bold px-4 py-2">SYSADMIN / REPAIR</button>
+      <!-- Nueva pestaña DESCARGAS -->
+      <button onclick="switchTab('downloads')" id="tab-btn-downloads" class="nav-btn text-lg font-bold px-4 py-2">DESCARGAS</button>
     </div>
 
     <!-- TikTok -->
@@ -331,24 +333,193 @@
       </div>
     </section>
 
-    <!-- Linux -->
+    <!-- Linux & Servidores (AMPLIADO) -->
     <section id="linux" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400">🐧 Linux & Servidores</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- 1) Cloudflare Tunnel -->
         <div class="glass-card p-4 rounded-xl">
           <h3 class="font-bold text-sky-300 mb-2">Cloudflare Tunnel</h3>
-          <p class="text-sm text-slate-400 mb-2">Expón tu servidor local.</p>
+          <p class="text-sm text-slate-400 mb-2">Expón tu servidor local con un túnel seguro.</p>
           <div class="code-block text-xs">
             $ cloudflared tunnel login<br>
-            $ cloudflared tunnel create nas
+            $ cloudflared tunnel create <span class="cisco-param">nas</span><br>
+            $ cloudflared tunnel route dns <span class="cisco-param">nas nas.mexweb.me</span><br>
+            $ cloudflared tunnel run <span class="cisco-param">nas</span>
           </div>
         </div>
+
+        <!-- 2) Mantenimiento rápido Debian/Ubuntu -->
         <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Mantenimiento</h3>
+          <h3 class="font-bold text-sky-300 mb-2">Mantenimiento rápido (Debian/Ubuntu)</h3>
+          <p class="text-sm text-slate-400 mb-2">Actualiza paquetes y limpia lo que no se usa.</p>
           <div class="code-block text-xs">
-            $ sudo apt update && sudo apt upgrade -y
+            $ sudo apt update && sudo apt upgrade -y<br>
+            $ sudo apt autoremove -y && sudo apt autoclean
           </div>
         </div>
+
+        <!-- 3) Usuarios y sudo -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Usuarios y permisos sudo</h3>
+          <p class="text-sm text-slate-400 mb-2">Crear usuario admin para administrar el servidor.</p>
+          <div class="code-block text-xs">
+            $ sudo adduser <span class="cisco-param">admin</span><br>
+            $ sudo usermod -aG sudo <span class="cisco-param">admin</span><br>
+            $ sudo visudo   <span class="cisco-comment"># (opcional: validar sudoers)</span>
+          </div>
+        </div>
+
+        <!-- 4) Firewall UFW -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Firewall rápido con UFW</h3>
+          <p class="text-sm text-slate-400 mb-2">Abrir solo lo necesario (SSH, HTTP, HTTPS).</p>
+          <div class="code-block text-xs">
+            $ sudo ufw default deny incoming<br>
+            $ sudo ufw default allow outgoing<br>
+            $ sudo ufw allow 22/tcp<br>
+            $ sudo ufw allow 80,443/tcp<br>
+            $ sudo ufw enable<br>
+            $ sudo ufw status verbose
+          </div>
+        </div>
+
+        <!-- 5) Nginx Reverse Proxy -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Nginx Reverse Proxy</h3>
+          <p class="text-sm text-slate-400 mb-2">Publica un servicio interno en el puerto 8080.</p>
+          <div class="code-block text-xs">
+            $ sudo apt install nginx -y<br>
+            $ sudo nano /etc/nginx/sites-available/<span class="cisco-param">miapp</span><br><br>
+            server {<br>
+            &nbsp;&nbsp;listen 80;<br>
+            &nbsp;&nbsp;server_name <span class="cisco-param">miapp.mexweb.me</span>;<br><br>
+            &nbsp;&nbsp;location / {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://127.0.0.1:8080;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Host $host;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Real-IP $remote_addr;<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            $ sudo ln -s /etc/nginx/sites-available/<span class="cisco-param">miapp</span> /etc/nginx/sites-enabled/<br>
+            $ sudo nginx -t && sudo systemctl reload nginx
+          </div>
+        </div>
+
+        <!-- 6) Let's Encrypt / Certbot -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Let's Encrypt con Certbot</h3>
+          <p class="text-sm text-slate-400 mb-2">HTTPS gratis para Nginx.</p>
+          <div class="code-block text-xs">
+            $ sudo apt install certbot python3-certbot-nginx -y<br>
+            $ sudo certbot --nginx -d <span class="cisco-param">miapp.mexweb.me</span><br>
+            $ sudo certbot renew --dry-run
+          </div>
+        </div>
+
+        <!-- 7) Docker básico -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Instalar Docker (script oficial)</h3>
+          <p class="text-sm text-slate-400 mb-2">Para montar contenedores rápido.</p>
+          <div class="code-block text-xs">
+            $ curl -fsSL https://get.docker.com -o get-docker.sh<br>
+            $ sudo sh get-docker.sh<br>
+            $ sudo usermod -aG docker <span class="cisco-param">$USER</span><br>
+            $ docker version
+          </div>
+        </div>
+
+        <!-- 8) Nginx en Docker -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Nginx en Docker</h3>
+          <p class="text-sm text-slate-400 mb-2">Servidor web estático en un comando.</p>
+          <div class="code-block text-xs">
+            $ docker run -d --name webtest -p 8080:80 nginx:alpine<br>
+            $ docker logs -f webtest<br>
+            $ docker stop webtest && docker rm webtest
+          </div>
+        </div>
+
+        <!-- 9) Monitoreo rápido -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Monitoreo rápido</h3>
+          <p class="text-sm text-slate-400 mb-2">CPU, RAM, disco e IO.</p>
+          <div class="code-block text-xs">
+            $ sudo apt install htop iotop nmon -y<br><br>
+            $ htop      <span class="cisco-comment"># CPU / RAM por proceso</span><br>
+            $ iotop     <span class="cisco-comment"># IO de disco en tiempo real</span><br>
+            $ nmon      <span class="cisco-comment"># Vista global del sistema</span>
+          </div>
+        </div>
+
+        <!-- 10) Backup de /etc -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Backup rápido de /etc</h3>
+          <p class="text-sm text-slate-400 mb-2">Saca copia de configuraciones críticas.</p>
+          <div class="code-block text-xs">
+            $ sudo tar -czf /root/backup-etc-$(date +%F).tar.gz /etc<br>
+            $ ls -lh /root/backup-etc-*.tar.gz
+          </div>
+        </div>
+
+        <!-- 11) Montar disco /data -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Montar disco /data</h3>
+          <p class="text-sm text-slate-400 mb-2">Agregar un segundo disco para datos.</p>
+          <div class="code-block text-xs">
+            $ lsblk<br>
+            $ sudo mkfs.ext4 /dev/<span class="cisco-param">sdb</span><br>
+            $ sudo mkdir -p /data<br>
+            $ echo "/dev/<span class="cisco-param">sdb</span> /data ext4 defaults 0 2" | sudo tee -a /etc/fstab<br>
+            $ sudo mount -a && df -h /data
+          </div>
+        </div>
+
+        <!-- 12) Servicio systemd simple -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Crear servicio systemd</h3>
+          <p class="text-sm text-slate-400 mb-2">Levantar un script en cada arranque.</p>
+          <div class="code-block text-xs">
+            $ sudo nano /etc/systemd/system/<span class="cisco-param">mi-script.service</span><br><br>
+            [Unit]<br>
+            Description=Script MexWeb<br><br>
+            [Service]<br>
+            ExecStart=/usr/local/bin/<span class="cisco-param">mi-script.sh</span><br>
+            Restart=always<br><br>
+            [Install]<br>
+            WantedBy=multi-user.target<br><br>
+            $ sudo systemctl daemon-reload<br>
+            $ sudo systemctl enable --now <span class="cisco-param">mi-script.service</span><br>
+            $ systemctl status <span class="cisco-param">mi-script.service</span>
+          </div>
+        </div>
+
+        <!-- 13) Logs centrales -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Logs más usados</h3>
+          <p class="text-sm text-slate-400 mb-2">Rutas típicas para debug en Linux.</p>
+          <div class="code-block text-xs">
+            $ sudo tail -f /var/log/syslog<br>
+            $ sudo tail -f /var/log/auth.log<br>
+            $ sudo journalctl -u <span class="cisco-param">nginx</span> -f<br>
+            $ sudo journalctl -xe
+          </div>
+        </div>
+
+        <!-- 14) SSH endurecido -->
+        <div class="glass-card p-4 rounded-xl">
+          <h3 class="font-bold text-sky-300 mb-2">Endurecer SSH</h3>
+          <p class="text-sm text-slate-400 mb-2">Cambiar puerto y desactivar root login.</p>
+          <div class="code-block text-xs">
+            $ sudo nano /etc/ssh/sshd_config<br><br>
+            Port <span class="cisco-param">2222</span><br>
+            PermitRootLogin no<br>
+            PasswordAuthentication no<br><br>
+            $ sudo systemctl restart sshd<br>
+            $ sudo ufw allow 2222/tcp
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -469,6 +640,201 @@
         <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">8) Disco/SMART</summary><div class="code-block text-xs">$ lsblk<br>$ smartctl -a /dev/sda</div></details>
         <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">9) Users/SSH</summary><div class="code-block text-xs">$ sudo adduser admin<br>$ sudo usermod -aG sudo admin<br>$ sudo ufw allow 22/tcp</div></details>
         <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">10) Actualizar todo</summary><div class="code-block text-xs">$ sudo apt update && sudo apt upgrade -y</div></details>
+      </div>
+    </section>
+
+    <!-- Zona de Descargas -->
+    <section id="downloads" class="tab-content">
+      <h2 class="text-3xl font-bold mb-3 text-sky-400 flex items-center gap-2">
+        <span>⬇️</span> Zona de Descargas
+      </h2>
+      <p class="text-slate-400 mb-6">
+        Herramientas que siempre uso en redes, soporte y laboratorios. Descarga desde las fuentes oficiales o desde mis espejos.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- WinBox -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>🧰</span> WinBox
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Herramienta oficial de MikroTik para administrar routers.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Plataforma: Windows</span>
+            <span class="text-sky-400 font-mono text-[11px]">~2 MB</span>
+          </div>
+          <a
+            href="https://download.mikrotik.com/winbox/WinBox64.exe"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar WinBox
+          </a>
+        </article>
+
+        <!-- PuTTY -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>🖥️</span> PuTTY
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Cliente SSH/Telnet ligero para acceder a equipos de red y servidores.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Plataforma: Windows</span>
+            <span class="text-sky-400 font-mono text-[11px]">~3 MB</span>
+          </div>
+          <a
+            href="https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar PuTTY
+          </a>
+        </article>
+
+        <!-- Rufus -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>💿</span> Rufus
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Crear USB booteables para instalar Windows, Linux y más.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Plataforma: Windows</span>
+            <span class="text-sky-400 font-mono text-[11px]">Portable</span>
+          </div>
+          <a
+            href="https://github.com/pbatard/rufus/releases/latest/download/rufus-x86_64.exe"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar Rufus
+          </a>
+        </article>
+
+        <!-- Angry IP Scanner -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>🌐</span> Angry IP Scanner
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Escáner de IPs rápido para encontrar hosts en tu red.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Windows / macOS / Linux</span>
+            <span class="text-sky-400 font-mono text-[11px]">Java</span>
+          </div>
+          <a
+            href="https://github.com/angryip/ipscan/releases/latest"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar Angry IP
+          </a>
+        </article>
+
+        <!-- Wireshark -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>📡</span> Wireshark
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Analizador de tráfico de red para capturar y estudiar paquetes.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Win / macOS / Linux</span>
+            <span class="text-sky-400 font-mono text-[11px]">x64</span>
+          </div>
+          <a
+            href="https://www.wireshark.org/download.html"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar Wireshark
+          </a>
+        </article>
+
+        <!-- VirtualBox -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>📦</span> VirtualBox
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Virtualización para tus laboratorios de Linux y Windows.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Win / macOS / Linux</span>
+            <span class="text-sky-400 font-mono text-[11px]">Múltiples SO</span>
+          </div>
+          <a
+            href="https://www.virtualbox.org/wiki/Downloads"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar VirtualBox
+          </a>
+        </article>
+
+        <!-- BalenaEtcher -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>🧪</span> BalenaEtcher
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Graba imágenes .ISO y .IMG a USB o SD de forma sencilla.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Win / macOS / Linux</span>
+            <span class="text-sky-400 font-mono text-[11px]">GUI</span>
+          </div>
+          <a
+            href="https://etcher.balena.io/"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar Etcher
+          </a>
+        </article>
+
+        <!-- Notepad++ -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>📝</span> Notepad++
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Editor de texto ligero ideal para configs y scripts rápidos.</p>
+          </header>
+          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
+            <span>Plataforma: Windows</span>
+            <span class="text-sky-400 font-mono text-[11px]">x86 / x64</span>
+          </div>
+          <a
+            href="https://github.com/notepad-plus-plus/notepad-plus-plus/releases/latest"
+            target="_blank"
+            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
+          >
+            Descargar Notepad++
+          </a>
+        </article>
+
+        <!-- Slot genérico -->
+        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
+          <header class="mb-3">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+              <span>➕</span> Más herramientas muy pronto
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Aquí irán otras apps que uso diario: AnyDesk, VS Code, herramientas de diagnóstico, etc.
+            </p>
+          </header>
+          <div class="mt-4 text-xs text-slate-500">
+            Si quieres que suba alguna herramienta en específico, mándame DM en TikTok <span class="text-sky-400 font-mono">@mexwebmx</span>.
+          </div>
+        </article>
       </div>
     </section>
 
@@ -610,4 +976,3 @@
   </script>
 </body>
 </html>
-```
