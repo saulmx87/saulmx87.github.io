@@ -11,40 +11,27 @@
       color: #e2e8f0;
       font-family: "Inter", sans-serif;
       min-height: 100vh;
-      overflow-x: hidden; /* Evita scroll horizontal */
+      overflow-x: hidden;
     }
 
     /* Animaciones */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideIn {
-      from { transform: translateX(-100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes shimmer {
-      0% { background-position: -1000px 0; }
-      100% { background-position: 1000px 0; }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
 
     .animate-fade-in { animation: fadeIn 0.6s ease-out; }
     .animate-slide-in { animation: slideIn 0.8s ease-out; }
     .animate-float { animation: float 3s ease-in-out infinite; }
 
-    /* Lógica de Tabs */
+    /* Tabs */
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.5s ease-out; }
-
     .nav-btn { transition: all 0.3s ease; position: relative; cursor: pointer; }
     .nav-btn.active { border-bottom: 2px solid #38bdf8; color: #38bdf8; }
     .nav-btn:hover { color: #38bdf8; transform: translateY(-2px); }
 
-    /* Estilos Glassmorphism */
+    /* Glassmorphism */
     .glass-card {
       background: rgba(30, 41, 59, 0.5);
       backdrop-filter: blur(10px);
@@ -66,8 +53,7 @@
       animation: shimmer 3s linear infinite;
     }
 
-    .tiktok-container { position: relative; overflow: hidden; }
-
+    /* Detalles y acordeones */
     details[open] summary ~ * { animation: fadeIn 0.3s ease-out; }
     details summary { list-style: none; outline: none; }
     details summary::-webkit-details-marker { display: none; }
@@ -87,7 +73,7 @@
     }
     .radio-player.hidden { transform: translateY(100%); }
 
-    /* Barras de ecualizador animadas */
+    /* Ecualizador */
     .equalizer { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
     .equalizer-bar {
       width: 3px; background: linear-gradient(to top, #38bdf8, #818cf8);
@@ -99,18 +85,18 @@
     .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
     @keyframes equalizer { 0%,100%{height:5px} 50%{height:25px} }
 
-    /* Estilos de Código (Terminal) */
+    /* Código Terminal */
     .code-block {
       background: #0f172a; border-left: 4px solid #38bdf8;
       padding: 1rem; border-radius: 0.5rem; overflow-x: auto;
       font-family: "Courier New", monospace; font-size: 0.9rem;
       box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
     }
-    .cisco-prompt { color: #10b981; font-weight: bold; } /* Verde para el hostname */
-    .cisco-command { color: #38bdf8; font-weight: bold; } /* Azul para comandos */
-    .cisco-comment { color: #64748b; font-style: italic; } /* Gris para comentarios */
-    .cisco-output { color: #fbbf24; } /* Amarillo para salidas */
-    .cisco-param { color: #f472b6; } /* Rosa para parámetros variables */
+    .cisco-prompt { color: #10b981; font-weight: bold; }
+    .cisco-command { color: #38bdf8; font-weight: bold; }
+    .cisco-comment { color: #64748b; font-style: italic; }
+    .cisco-output { color: #fbbf24; }
+    .cisco-param { color: #f472b6; }
   </style>
 </head>
 <body>
@@ -120,9 +106,9 @@
       <div class="flex items-center gap-2">
         <span class="animate-pulse text-green-500">●</span>
         <span class="text-sky-400 font-bold">MEXWEB RADIO</span>
-        <span id="autoStatus" class="text-slate-400 hidden md:inline">- Iniciando...</span>
+        <span id="autoStatus" class="text-slate-400 hidden md:inline">- Conectando...</span>
       </div>
-      <button id="unmuteTopBtn" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-1 rounded-full text-xs font-bold transition-all animate-bounce">
+      <button id="unmuteTopBtn" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-1 rounded-full text-xs font-bold transition-all animate-bounce hidden">
         🔊 ACTIVAR SONIDO
       </button>
     </div>
@@ -169,7 +155,6 @@
         <div class="glass-card rounded-xl p-2 w-full max-w-[350px]">
            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@mexwebmx" data-unique-id="mexwebmx" data-embed-type="creator" style="max-width: 780px; min-width: 288px;" > <section> <a target="_blank" href="https://www.tiktok.com/@mexwebmx?refer=creator_embed">@mexwebmx</a> </section> </blockquote> 
         </div>
-        
         <div class="glass-card rounded-xl p-8 w-full flex flex-col justify-center items-center text-center">
           <div class="text-5xl mb-4">📺</div>
           <h3 class="text-xl font-bold text-white mb-2">¿Buscas tutoriales?</h3>
@@ -185,59 +170,44 @@
       <h2 class="text-3xl font-bold mb-6 text-sky-400 flex items-center gap-2">
         <span class="text-white">🔌</span> Configuraciones Cisco
       </h2>
-      <p class="text-slate-400 mb-8">Guía rápida de comandos esenciales para Routers y Switches Cisco. Haz clic en cada sección para ver el código.</p>
+      <p class="text-slate-400 mb-8">Guía rápida de comandos esenciales para Routers y Switches Cisco.</p>
 
       <div class="space-y-4">
         
         <details class="glass-card p-5 rounded-xl cursor-pointer group">
           <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
             🚀 1. Configuración Básica al Iniciar
-            <span class="text-slate-500 text-sm">Hostname, DNS, Encriptación</span>
+            <span class="text-slate-500 text-sm">Hostname, DNS</span>
           </summary>
           <div class="mt-4 animate-fade-in">
-            <p class="text-slate-300 mb-2">Comandos fundamentales al encender un equipo nuevo para darle identidad y seguridad básica.</p>
             <div class="code-block">
               <span class="cisco-comment">! Entrar al modo de configuración global</span><br>
               <span class="cisco-prompt">Router></span> <span class="cisco-command">enable</span><br>
               <span class="cisco-prompt">Router#</span> <span class="cisco-command">configure terminal</span><br><br>
-              
-              <span class="cisco-comment">! Asignar nombre al dispositivo</span><br>
-              <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">hostname</span> <span class="cisco-param">MexWeb-R1</span><br><br>
-
-              <span class="cisco-comment">! Deshabilitar la búsqueda de DNS (evita demoras si te equivocas al escribir)</span><br>
+              <span class="cisco-comment">! Asignar nombre y quitar DNS</span><br>
+              <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">hostname</span> <span class="cisco-param">MexWeb-R1</span><br>
               <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">no ip domain-lookup</span><br><br>
-
-              <span class="cisco-comment">! Sincronizar logs para que no interrumpan lo que escribes</span><br>
+              <span class="cisco-comment">! Sincronizar logs</span><br>
               <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">line console 0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">logging synchronous</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">exit</span>
+              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">logging synchronous</span>
             </div>
           </div>
         </details>
 
         <details class="glass-card p-5 rounded-xl cursor-pointer group">
           <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🔐 2. Seguridad (Passwords y Acceso)
-            <span class="text-slate-500 text-sm">Console, VTY, Secret</span>
+            🔐 2. Seguridad (Passwords)
+            <span class="text-slate-500 text-sm">Console, Secret</span>
           </summary>
           <div class="mt-4 animate-fade-in">
-            <p class="text-slate-300 mb-2">Protege el acceso físico y remoto a tu dispositivo.</p>
             <div class="code-block">
-              <span class="cisco-comment">! Contraseña para modo privilegiado (Encriptado MD5)</span><br>
+              <span class="cisco-comment">! Contraseña privilegiada (MD5)</span><br>
               <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">enable secret</span> <span class="cisco-param">Cisco123!</span><br><br>
-
-              <span class="cisco-comment">! Encriptar contraseñas de texto plano en la config</span><br>
+              <span class="cisco-comment">! Encriptar passwords planos</span><br>
               <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">service password-encryption</span><br><br>
-
-              <span class="cisco-comment">! Seguridad en puerto de Consola (Físico)</span><br>
+              <span class="cisco-comment">! Consola</span><br>
               <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">line console 0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">password</span> <span class="cisco-param">ConsolaSegura</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">login</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">exit</span><br><br>
-
-              <span class="cisco-comment">! Seguridad en líneas VTY (Telnet/SSH)</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">line vty 0 4</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">password</span> <span class="cisco-param">Remoto123</span><br>
+              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">password</span> <span class="cisco-param">PassConsola</span><br>
               <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">login</span>
             </div>
           </div>
@@ -245,17 +215,14 @@
 
         <details class="glass-card p-5 rounded-xl cursor-pointer group">
           <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            📢 3. Banner MOTD (Mensaje de Bienvenida)
-            <span class="text-slate-500 text-sm">Avisos legales</span>
+            📢 3. Banner MOTD
+            <span class="text-slate-500 text-sm">Mensaje bienvenida</span>
           </summary>
           <div class="mt-4 animate-fade-in">
-            <p class="text-slate-300 mb-2">Muestra un mensaje legal o de advertencia antes de iniciar sesión. Usa un carácter delimitador (como #) para empezar y terminar.</p>
             <div class="code-block">
               <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">banner motd #</span><br>
-              <span class="cisco-output">Enter TEXT message. End with the character '#'.</span><br>
               <span class="cisco-output">*****************************************</span><br>
               <span class="cisco-output">* PROPIEDAD DE MEXWEB - ACCESO RESTRINGIDO *</span><br>
-              <span class="cisco-output">* Toda actividad será monitoreada.         *</span><br>
               <span class="cisco-output">*****************************************</span><br>
               <span class="cisco-command">#</span>
             </div>
@@ -264,53 +231,31 @@
 
         <details class="glass-card p-5 rounded-xl cursor-pointer group">
           <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🔌 4. Configurar Interfaces
-            <span class="text-slate-500 text-sm">IP Address, No Shutdown</span>
+            🔌 4. Interfaces
+            <span class="text-slate-500 text-sm">IP, No Shutdown</span>
           </summary>
           <div class="mt-4 animate-fade-in">
-            <p class="text-slate-300 mb-2">Asignar direcciones IP y encender los puertos.</p>
             <div class="code-block">
-              <span class="cisco-comment">! Ingresar a la interfaz GigabitEthernet 0/0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">interface g0/0</span><br><br>
-
-              <span class="cisco-comment">! Agregar descripción (Buena práctica)</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">description Conexión a LAN Principal</span><br><br>
-
-              <span class="cisco-comment">! Asignar IP y Máscara</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">ip address</span> <span class="cisco-param">192.168.10.1 255.255.255.0</span><br><br>
-
-              <span class="cisco-comment">! ENCENDER la interfaz (Importante)</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">no shutdown</span><br>
-              <span class="cisco-output">%LINK-3-UPDOWN: Interface GigabitEthernet0/0, changed state to up</span>
+              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">interface g0/0</span><br>
+              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">ip address</span> <span class="cisco-param">192.168.10.1 255.255.255.0</span><br>
+              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">no shutdown</span>
             </div>
           </div>
         </details>
 
         <details class="glass-card p-5 rounded-xl cursor-pointer group">
           <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            👁️ 5. Comandos de Verificación (Show)
-            <span class="text-slate-500 text-sm">Running-config, IP Brief</span>
+            👁️ 5. Verificación (Show)
+            <span class="text-slate-500 text-sm">Running-config, Brief</span>
           </summary>
           <div class="mt-4 animate-fade-in">
-            <p class="text-slate-300 mb-2">Cómo revisar qué está pasando en el router.</p>
             <div class="code-block">
-              <span class="cisco-comment">! Ver la configuración actual completa</span><br>
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show running-config</span><br><br>
-
-              <span class="cisco-comment">! Resumen rápido de estado de interfaces e IPs</span><br>
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show ip interface brief</span><br><br>
-
-              <span class="cisco-comment">! Ver tabla de enrutamiento</span><br>
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show ip route</span><br><br>
-
-              <span class="cisco-comment">! Guardar cambios en memoria permanente</span><br>
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">copy running-config startup-config</span><br>
-              <span class="cisco-output">Destination filename [startup-config]? (Enter)</span><br>
-              <span class="cisco-output">Building configuration... [OK]</span>
+              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show running-config</span><br>
+              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show ip interface brief</span><br>
+              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">copy running-config startup-config</span>
             </div>
           </div>
         </details>
-
       </div>
     </section>
 
@@ -319,15 +264,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="glass-card p-4 rounded-xl">
           <h3 class="font-bold text-sky-300 mb-2">Cloudflare Tunnel</h3>
-          <p class="text-sm text-slate-400 mb-2">Expón tu servidor local sin abrir puertos.</p>
+          <p class="text-sm text-slate-400 mb-2">Expón tu servidor local.</p>
           <div class="code-block text-xs">
             $ cloudflared tunnel login<br>
-            $ cloudflared tunnel create nas<br>
-            $ cloudflared tunnel run nas
+            $ cloudflared tunnel create nas
           </div>
         </div>
         <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Actualizar Sistema</h3>
+          <h3 class="font-bold text-sky-300 mb-2">Mantenimiento</h3>
           <div class="code-block text-xs">
             $ sudo apt update && sudo apt upgrade -y
           </div>
@@ -344,7 +288,6 @@
           <span id="iconPlay">▶</span>
           <span id="iconPause" class="hidden">⏸</span>
         </button>
-        
         <div>
           <div class="flex items-center gap-2">
             <h3 class="font-bold text-white text-lg">MexWeb Radio</h3>
@@ -352,7 +295,7 @@
               <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
             </div>
           </div>
-          <p id="playerStatus" class="text-xs text-sky-300">Cargando stream...</p>
+          <p id="playerStatus" class="text-xs text-sky-300">Cargando...</p>
         </div>
       </div>
 
@@ -363,28 +306,20 @@
     </div>
   </div>
 
-  <audio id="audioStream" crossorigin="anonymous" preload="auto">
-    <source src="https://radio.mexweb.me/stream" type="audio/mpeg">
-    <source src="https://radio.mexweb.me/radio.mp3" type="audio/mpeg">
-    <source src="https://radio.mexweb.me/;" type="audio/mpeg">
-  </audio>
+  <audio id="audioStream" crossorigin="anonymous" preload="none"></audio>
 
   <script async src="https://www.tiktok.com/embed.js"></script>
   <script>
-    // --- Lógica de Pestañas ---
+    // Tabs Lógica
     function switchTab(tabId) {
-      // Ocultar todos los contenidos
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      // Desactivar botones
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      
-      // Activar el seleccionado
       document.getElementById(tabId).classList.add('active');
       const btn = document.getElementById('tab-btn-' + tabId);
       if(btn) btn.classList.add('active');
     }
 
-    // --- Lógica de Radio ---
+    // Lógica Radio Corregida
     document.addEventListener('DOMContentLoaded', () => {
       const audio = document.getElementById('audioStream');
       const mainPlayBtn = document.getElementById('mainPlayBtn');
@@ -397,44 +332,43 @@
       const unmuteTopBtn = document.getElementById('unmuteTopBtn');
       const autoStatus = document.getElementById('autoStatus');
 
+      // URL EXACTA DEL STREAM (Sin .mp3 al final)
+      const STREAM_URL = "https://radio.mexweb.me/radio"; 
       let isPlaying = false;
 
-      // Función para actualizar interfaz
+      // Función mágica que arregla el silencio: agrega timestamp
+      function setSource() {
+          audio.src = STREAM_URL + "?" + Date.now();
+      }
+
       function updateUI(playing) {
         if (playing) {
           iconPlay.classList.add('hidden');
           iconPause.classList.remove('hidden');
           visualizer.classList.remove('opacity-0');
-          playerStatus.textContent = "Transmitiendo en vivo • " + (audio.muted ? "(Silenciado)" : "Sonando");
-          playerStatus.classList.add('text-green-400');
+          playerStatus.innerHTML = "Transmitiendo en vivo • <span class='" + (audio.muted ? "text-yellow-400" : "text-green-400") + "'>" + (audio.muted ? "(Silenciado)" : "Sonando") + "</span>";
         } else {
           iconPlay.classList.remove('hidden');
           iconPause.classList.add('hidden');
           visualizer.classList.add('opacity-0');
           playerStatus.textContent = "Pausado";
-          playerStatus.classList.remove('text-green-400');
         }
       }
 
-      // Intentar Autoplay
       function tryAutoplay() {
-        // Los navegadores bloquean autoplay con sonido.
-        // Estrategia: Iniciar Muted y pedir al usuario que active el sonido.
-        audio.muted = true; 
+        setSource(); // IMPORTANTE: Establecer URL antes
+        audio.muted = true; // Necesario para navegadores modernos
         audio.volume = 0.5;
         
         var promise = audio.play();
-
         if (promise !== undefined) {
           promise.then(_ => {
-            // Autoplay exitoso (pero mudo)
             isPlaying = true;
             updateUI(true);
             autoStatus.textContent = "Reproduciendo en silencio";
-            unmuteTopBtn.classList.remove('hidden');
+            unmuteTopBtn.classList.remove('hidden'); // Mostrar botón de activar sonido
           }).catch(error => {
-            // Autoplay bloqueado
-            console.log("Autoplay bloqueado por el navegador:", error);
+            console.log("Autoplay bloqueado:", error);
             playerStatus.textContent = "Haz clic en Play para iniciar";
             autoStatus.textContent = "Esperando inicio manual";
             isPlaying = false;
@@ -443,54 +377,48 @@
         }
       }
 
-      // Control Play/Pause
       mainPlayBtn.addEventListener('click', () => {
         if (isPlaying) {
           audio.pause();
+          audio.src = ""; // Detener buffering
           isPlaying = false;
         } else {
-          // Si el usuario da play manual, quitamos el mute
+          setSource(); // Nueva conexión limpia
           audio.muted = false;
           audio.play();
           isPlaying = true;
-          unmuteTopBtn.classList.add('hidden'); // Ya no es necesario el botón de ayuda
+          unmuteTopBtn.classList.add('hidden');
         }
         updateUI(isPlaying);
       });
 
-      // Control Volumen
       volumeSlider.addEventListener('input', (e) => {
         audio.volume = e.target.value;
         if(audio.volume > 0 && audio.muted) {
-          audio.muted = false; // Quitar mute si mueve el slider
+          audio.muted = false;
           updateUI(true);
         }
       });
 
-      // Botón Mute Inferior
       muteBtn.addEventListener('click', () => {
         audio.muted = !audio.muted;
         muteBtn.textContent = audio.muted ? '🔇' : '🔊';
         updateUI(isPlaying);
       });
 
-      // Botón Gigante "Activar Sonido" (Arriba)
       unmuteTopBtn.addEventListener('click', () => {
-        audio.muted = false;
-        audio.volume = 0.8;
-        volumeSlider.value = 0.8;
         if (!isPlaying) {
-            audio.play().then(() => {
-                isPlaying = true;
-                updateUI(true);
-            });
-        } else {
-            updateUI(true);
+            setSource();
+            audio.play();
+            isPlaying = true;
         }
-        unmuteTopBtn.classList.add('hidden'); // Ocultar botón tras usarlo
+        audio.muted = false;
+        audio.volume = 1.0;
+        volumeSlider.value = 1.0;
+        updateUI(true);
+        unmuteTopBtn.classList.add('hidden');
       });
 
-      // Iniciar al cargar
       tryAutoplay();
     });
   </script>
