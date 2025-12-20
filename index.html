@@ -13,25 +13,17 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
-    /* Animaciones */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-    @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-
     .animate-fade-in { animation: fadeIn 0.6s ease-out; }
     .animate-slide-in { animation: slideIn 0.8s ease-out; }
     .animate-float { animation: float 3s ease-in-out infinite; }
-
-    /* Tabs */
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.5s ease-out; }
     .nav-btn { transition: all 0.3s ease; position: relative; cursor: pointer; }
     .nav-btn.active { border-bottom: 2px solid #38bdf8; color: #38bdf8; }
     .nav-btn:hover { color: #38bdf8; transform: translateY(-2px); }
-
-    /* Glassmorphism */
     .glass-card {
       background: rgba(30, 41, 59, 0.5);
       backdrop-filter: blur(10px);
@@ -43,7 +35,6 @@
       border-color: rgba(56, 189, 248, 0.5);
       box-shadow: 0 10px 40px rgba(56, 189, 248, 0.2);
     }
-
     .logo-text {
       background: linear-gradient(90deg, #38bdf8, #818cf8, #38bdf8);
       background-size: 200% auto;
@@ -52,16 +43,11 @@
       background-clip: text;
       animation: shimmer 3s linear infinite;
     }
-
-    /* Detalles y acordeones */
     details[open] summary ~ * { animation: fadeIn 0.3s ease-out; }
     details summary { list-style: none; outline: none; }
     details summary::-webkit-details-marker { display: none; }
-
     .nav-link { position: relative; transition: all 0.3s ease; }
     .nav-link:hover { color: #38bdf8; }
-
-    /* Radio Player */
     .radio-player {
       position: fixed; left: 0; right: 0; bottom: 0;
       background: rgba(15, 23, 42, 0.95);
@@ -72,8 +58,6 @@
       transition: transform 0.3s ease;
     }
     .radio-player.hidden { transform: translateY(100%); }
-
-    /* Ecualizador */
     .equalizer { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
     .equalizer-bar {
       width: 3px; background: linear-gradient(to top, #38bdf8, #818cf8);
@@ -84,8 +68,6 @@
     .equalizer-bar:nth-child(2) { animation-delay: 0.1s; }
     .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
     @keyframes equalizer { 0%,100%{height:5px} 50%{height:25px} }
-
-    /* Código Terminal */
     .code-block {
       background: #0f172a; border-left: 4px solid #38bdf8;
       padding: 1rem; border-radius: 0.5rem; overflow-x: auto;
@@ -144,8 +126,12 @@
       <button onclick="switchTab('tiktok')" id="tab-btn-tiktok" class="nav-btn active text-lg font-bold px-4 py-2">TIKTOK</button>
       <button onclick="switchTab('cisco')" id="tab-btn-cisco" class="nav-btn text-lg font-bold px-4 py-2">CISCO IOS</button>
       <button onclick="switchTab('linux')" id="tab-btn-linux" class="nav-btn text-lg font-bold px-4 py-2">LINUX & SERVIDORES</button>
+      <button onclick="switchTab('mikrotik')" id="tab-btn-mikrotik" class="nav-btn text-lg font-bold px-4 py-2">MIKROTIK (ROS)</button>
+      <button onclick="switchTab('iot')" id="tab-btn-iot" class="nav-btn text-lg font-bold px-4 py-2">IoT / ESP32</button>
+      <button onclick="switchTab('sysadmin')" id="tab-btn-sysadmin" class="nav-btn text-lg font-bold px-4 py-2">SYSADMIN / REPAIR</button>
     </div>
 
+    <!-- TikTok -->
     <section id="tiktok" class="tab-content active">
       <div class="text-center mb-10">
         <h2 class="text-4xl font-bold mb-2">Feed Reciente</h2>
@@ -166,6 +152,7 @@
       </div>
     </section>
 
+    <!-- Cisco IOS -->
     <section id="cisco" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400 flex items-center gap-2">
         <span class="text-white">🔌</span> Configuraciones Cisco
@@ -173,7 +160,6 @@
       <p class="text-slate-400 mb-8">Guía rápida de comandos esenciales para Routers y Switches Cisco.</p>
 
       <div class="space-y-4">
-        
         <details class="glass-card p-5 rounded-xl cursor-pointer group">
           <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
             🚀 1. Configuración Básica al Iniciar
@@ -256,9 +242,96 @@
             </div>
           </div>
         </details>
+
+        <!-- 5 entradas extra para llegar a 10 -->
+        <details class="glass-card p-5 rounded-xl cursor-pointer group">
+          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
+            🔒 6. SSH Seguro
+            <span class="text-slate-500 text-sm">RSA, VTY</span>
+          </summary>
+          <div class="mt-4 animate-fade-in">
+            <div class="code-block">
+              Router(config)# <span class="cisco-command">ip domain-name</span> <span class="cisco-param">mexweb.me</span><br>
+              Router(config)# <span class="cisco-command">username admin privilege 15 secret</span> <span class="cisco-param">Admin123!</span><br>
+              Router(config)# <span class="cisco-command">crypto key generate rsa</span> (2048)<br>
+              Router(config)# <span class="cisco-command">ip ssh version 2</span><br>
+              Router(config)# <span class="cisco-command">line vty 0 4</span><br>
+              Router(config-line)# <span class="cisco-command">transport input ssh</span><br>
+              Router(config-line)# <span class="cisco-command">login local</span>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-card p-5 rounded-xl cursor-pointer group">
+          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
+            🌐 7. Ruta estática + Default
+            <span class="text-slate-500 text-sm">ip route</span>
+          </summary>
+          <div class="mt-4 animate-fade-in">
+            <div class="code-block">
+              Router(config)# <span class="cisco-command">ip route</span> <span class="cisco-param">10.0.0.0 255.0.0.0 200.100.50.1</span><br>
+              Router(config)# <span class="cisco-command">ip route</span> <span class="cisco-param">0.0.0.0 0.0.0.0 200.100.50.1</span><br>
+              Router# <span class="cisco-command">show ip route</span>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-card p-5 rounded-xl cursor-pointer group">
+          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
+            🏢 8. VLAN en Switch
+            <span class="text-slate-500 text-sm">access / trunk</span>
+          </summary>
+          <div class="mt-4 animate-fade-in">
+            <div class="code-block">
+              Switch(config)# <span class="cisco-command">vlan</span> <span class="cisco-param">10</span><br>
+              Switch(config-vlan)# <span class="cisco-command">name</span> <span class="cisco-param">Admin</span><br>
+              Switch(config)# <span class="cisco-command">interface fa0/1</span><br>
+              Switch(config-if)# <span class="cisco-command">switchport mode access</span><br>
+              Switch(config-if)# <span class="cisco-command">switchport access vlan 10</span><br><br>
+              Switch(config)# <span class="cisco-command">interface gi0/1</span><br>
+              Switch(config-if)# <span class="cisco-command">switchport mode trunk</span><br>
+              Switch(config-if)# <span class="cisco-command">switchport trunk allowed vlan all</span>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-card p-5 rounded-xl cursor-pointer group">
+          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
+            📊 9. QoS Rápido
+            <span class="text-slate-500 text-sm">class-map/policy</span>
+          </summary>
+          <div class="mt-4 animate-fade-in">
+            <div class="code-block">
+              Router(config)# <span class="cisco-command">class-map match-any</span> <span class="cisco-param">VOICE</span><br>
+              Router(config-cmap)# <span class="cisco-command">match ip dscp ef</span><br>
+              Router(config)# <span class="cisco-command">policy-map</span> <span class="cisco-param">QOS-WAN</span><br>
+              Router(config-pmap)# <span class="cisco-command">class</span> <span class="cisco-param">VOICE</span><br>
+              Router(config-pmap-c)# <span class="cisco-command">priority</span> <span class="cisco-param">1000</span><br>
+              Router(config)# <span class="cisco-command">interface</span> <span class="cisco-param">s0/0/0</span><br>
+              Router(config-if)# <span class="cisco-command">service-policy output</span> <span class="cisco-param">QOS-WAN</span>
+            </div>
+          </div>
+        </details>
+
+        <details class="glass-card p-5 rounded-xl cursor-pointer group">
+          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
+            🛠️ 10. Troubleshooting
+            <span class="text-slate-500 text-sm">ping, traceroute</span>
+          </summary>
+          <div class="mt-4 animate-fade-in">
+            <div class="code-block">
+              Router# <span class="cisco-command">ping 8.8.8.8</span><br>
+              Router# <span class="cisco-command">traceroute 8.8.8.8</span><br>
+              Router# <span class="cisco-command">show arp</span><br>
+              Router# <span class="cisco-command">show interfaces</span><br>
+              Router# <span class="cisco-command">clear counters</span>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 
+    <!-- Linux -->
     <section id="linux" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400">🐧 Linux & Servidores</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -276,6 +349,126 @@
             $ sudo apt update && sudo apt upgrade -y
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- MikroTik / RouterOS -->
+    <section id="mikrotik" class="tab-content">
+      <h2 class="text-3xl font-bold mb-6 text-sky-400">📡 MikroTik / RouterOS</h2>
+      <div class="space-y-4">
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">1) Sistema básico</summary>
+          <div class="code-block text-xs">
+            /system identity set name=MEXWEB-RB<br>
+            /ip dns set servers=1.1.1.1,8.8.8.8 allow-remote-requests=yes<br>
+            /system clock set time-zone-name=America/Mexico_City
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">2) Usuarios y seguridad</summary>
+          <div class="code-block text-xs">
+            /user add name=admin2 group=full password=StrongPass!<br>
+            /user ssh-keys import user=admin2 public-key-file=id_rsa.pub<br>
+            /ip service set telnet disabled=yes<br>
+            /ip service set ftp disabled=yes
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">3) Firewall básico</summary>
+          <div class="code-block text-xs">
+            /ip firewall filter add chain=input action=accept connection-state=established,related<br>
+            /ip firewall filter add chain=input action=drop connection-state=invalid<br>
+            /ip firewall filter add chain=input action=accept protocol=tcp dst-port=22,80,443<br>
+            /ip firewall filter add chain=input action=drop in-interface=WAN
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">4) NAT masquerade</summary>
+          <div class="code-block text-xs">
+            /ip firewall nat add chain=srcnat action=masquerade out-interface=WAN
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">5) DHCP server</summary>
+          <div class="code-block text-xs">
+            /ip pool add name=LAN ranges=192.168.88.100-192.168.88.200<br>
+            /ip dhcp-server add name=dhcp1 interface=LAN address-pool=LAN<br>
+            /ip dhcp-server network add address=192.168.88.0/24 gateway=192.168.88.1 dns-server=1.1.1.1
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">6) Bridges y VLANs</summary>
+          <div class="code-block text-xs">
+            /interface bridge add name=bridge1 vlan-filtering=yes<br>
+            /interface bridge port add bridge=bridge1 interface=ether2 pvid=10<br>
+            /interface bridge vlan add bridge=bridge1 vlan-ids=10 tagged=bridge1 untagged=ether2
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">7) Rutas estáticas</summary>
+          <div class="code-block text-xs">
+            /ip route add dst-address=10.0.0.0/8 gateway=192.0.2.1<br>
+            /ip route add dst-address=0.0.0.0/0 gateway=200.100.50.1
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">8) WireGuard rápido</summary>
+          <div class="code-block text-xs">
+            /interface wireguard add name=wg0 listen-port=51820<br>
+            /ip address add address=10.10.10.1/24 interface=wg0<br>
+            /interface wireguard peers add interface=wg0 public-key="PUBKEY" allowed-address=10.10.10.2/32
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">9) CapsMAN / WiFi</summary>
+          <div class="code-block text-xs">
+            /caps-man manager set enabled=yes<br>
+            /caps-man channel add name=ch1 frequency=5180<br>
+            /caps-man configuration add name=cfg1 ssid=MEXWEB security.authentication-types=wpa2-psk security.passphrase=ClaveWiFi
+          </div>
+        </details>
+        <details class="glass-card p-4 rounded-xl">
+          <summary class="font-bold text-sky-300">10) Monitoreo</summary>
+          <div class="code-block text-xs">
+            /tool graphing interface add interface=ether1<br>
+            /tool bandwidth-server set enabled=yes<br>
+            /interface monitor-traffic ether1 once
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- IoT / ESP32 -->
+    <section id="iot" class="tab-content">
+      <h2 class="text-3xl font-bold mb-6 text-sky-400">🔧 IoT / ESP32</h2>
+      <div class="space-y-4">
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">1) Parpadeo LED (Arduino)</summary><div class="code-block text-xs">pinMode(2, OUTPUT);<br>digitalWrite(2, HIGH); delay(500);<br>digitalWrite(2, LOW); delay(500);</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">2) WiFi connect (ESP32)</summary><div class="code-block text-xs">WiFi.begin("SSID","PASS");<br>while(WiFi.status()!=WL_CONNECTED){delay(500);}</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">3) HTTP GET</summary><div class="code-block text-xs">HTTPClient http;<br>http.begin("https://api.mexweb.me/ping");<br>int c=http.GET();</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">4) MQTT publish</summary><div class="code-block text-xs">// PubSubClient<br>client.publish("lab/esp","hola");</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">5) Sensor DHT11</summary><div class="code-block text-xs">float t = dht.readTemperature();<br>float h = dht.readHumidity();</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">6) Deep Sleep</summary><div class="code-block text-xs">esp_sleep_enable_timer_wakeup(10e6);<br>esp_deep_sleep_start();</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">7) OTA Update</summary><div class="code-block text-xs">ArduinoOTA.begin();<br>ArduinoOTA.handle();</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">8) PWM LED</summary><div class="code-block text-xs">ledcAttachPin(2,0);<br>ledcSetup(0,5000,8);<br>ledcWrite(0,128);</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">9) I2C Scan</summary><div class="code-block text-xs">Wire.begin();<br>for(byte a=1;a<127;a++){Wire.beginTransmission(a);if(Wire.endTransmission()==0){/*found*/}}</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">10) SPIFFS read</summary><div class="code-block text-xs">if(!SPIFFS.begin(true)){}<br>File f=SPIFFS.open("/cfg.txt");</div></details>
+      </div>
+    </section>
+
+    <!-- SysAdmin / Repair -->
+    <section id="sysadmin" class="tab-content">
+      <h2 class="text-3xl font-bold mb-6 text-sky-400">🛠️ SysAdmin / Repair</h2>
+      <div class="space-y-4">
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">1) Checar espacio</summary><div class="code-block text-xs">$ df -h</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">2) Uso CPU/RAM</summary><div class="code-block text-xs">$ top<br>$ htop</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">3) Logs rápidos</summary><div class="code-block text-xs">$ journalctl -xe<br>$ tail -f /var/log/syslog</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">4) Red básica</summary><div class="code-block text-xs">$ ip a<br>$ ip r<br>$ ping 8.8.8.8</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">5) Puertos</summary><div class="code-block text-xs">$ ss -tulnp<br>$ netstat -plnt</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">6) Servicios</summary><div class="code-block text-xs">$ systemctl status nginx<br>$ systemctl restart nginx</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">7) Backup rápido</summary><div class="code-block text-xs">$ tar -czf backup.tar.gz /etc</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">8) Disco/SMART</summary><div class="code-block text-xs">$ lsblk<br>$ smartctl -a /dev/sda</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">9) Users/SSH</summary><div class="code-block text-xs">$ sudo adduser admin<br>$ sudo usermod -aG sudo admin<br>$ sudo ufw allow 22/tcp</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">10) Actualizar todo</summary><div class="code-block text-xs">$ sudo apt update && sudo apt upgrade -y</div></details>
       </div>
     </section>
 
@@ -310,7 +503,7 @@
 
   <script async src="https://www.tiktok.com/embed.js"></script>
   <script>
-    // Tabs Lógica
+    // Tabs
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -319,7 +512,7 @@
       if(btn) btn.classList.add('active');
     }
 
-    // Lógica Radio Corregida
+    // Radio
     document.addEventListener('DOMContentLoaded', () => {
       const audio = document.getElementById('audioStream');
       const mainPlayBtn = document.getElementById('mainPlayBtn');
@@ -331,22 +524,17 @@
       const muteBtn = document.getElementById('muteBtn');
       const unmuteTopBtn = document.getElementById('unmuteTopBtn');
       const autoStatus = document.getElementById('autoStatus');
-
-      // URL EXACTA DEL STREAM (Sin .mp3 al final)
       const STREAM_URL = "https://radio.mexweb.me/radio"; 
       let isPlaying = false;
 
-      // Función mágica que arregla el silencio: agrega timestamp
-      function setSource() {
-          audio.src = STREAM_URL + "?" + Date.now();
-      }
+      function setSource() { audio.src = STREAM_URL + "?" + Date.now(); }
 
       function updateUI(playing) {
         if (playing) {
           iconPlay.classList.add('hidden');
           iconPause.classList.remove('hidden');
           visualizer.classList.remove('opacity-0');
-          playerStatus.innerHTML = "Transmitiendo en vivo • <span class='" + (audio.muted ? "text-yellow-400" : "text-green-400") + "'>" + (audio.muted ? "(Silenciado)" : "Sonando") + "</span>";
+          playerStatus.innerHTML = "Transmitiendo • <span class='" + (audio.muted ? "text-yellow-400" : "text-green-400") + "'>" + (audio.muted ? "(Silenciado)" : "Sonando") + "</span>";
         } else {
           iconPlay.classList.remove('hidden');
           iconPause.classList.add('hidden');
@@ -356,19 +544,17 @@
       }
 
       function tryAutoplay() {
-        setSource(); // IMPORTANTE: Establecer URL antes
-        audio.muted = true; // Necesario para navegadores modernos
+        setSource();
+        audio.muted = true;
         audio.volume = 0.5;
-        
-        var promise = audio.play();
-        if (promise !== undefined) {
-          promise.then(_ => {
+        const p = audio.play();
+        if (p) {
+          p.then(() => {
             isPlaying = true;
             updateUI(true);
             autoStatus.textContent = "Reproduciendo en silencio";
-            unmuteTopBtn.classList.remove('hidden'); // Mostrar botón de activar sonido
-          }).catch(error => {
-            console.log("Autoplay bloqueado:", error);
+            unmuteTopBtn.classList.remove('hidden');
+          }).catch(() => {
             playerStatus.textContent = "Haz clic en Play para iniciar";
             autoStatus.textContent = "Esperando inicio manual";
             isPlaying = false;
@@ -380,10 +566,10 @@
       mainPlayBtn.addEventListener('click', () => {
         if (isPlaying) {
           audio.pause();
-          audio.src = ""; // Detener buffering
+          audio.src = "";
           isPlaying = false;
         } else {
-          setSource(); // Nueva conexión limpia
+          setSource();
           audio.muted = false;
           audio.play();
           isPlaying = true;
@@ -408,9 +594,9 @@
 
       unmuteTopBtn.addEventListener('click', () => {
         if (!isPlaying) {
-            setSource();
-            audio.play();
-            isPlaying = true;
+          setSource();
+          audio.play();
+          isPlaying = true;
         }
         audio.muted = false;
         audio.volume = 1.0;
@@ -424,3 +610,4 @@
   </script>
 </body>
 </html>
+```
