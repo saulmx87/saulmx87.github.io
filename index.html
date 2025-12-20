@@ -1,3 +1,6 @@
+¡Perfecto!  Aquí está tu página mejorada con la sección de radio que se reproduce automáticamente y configuraciones detalladas de Cisco:
+
+````html name=index.html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,7 +19,7 @@
         /* Animaciones */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
-            to { opacity:  1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes slideIn {
@@ -31,12 +34,22 @@
         
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 20px rgba(34,197,94,0.3); }
-            50% { box-shadow:  0 0 40px rgba(34,197,94,0.6); }
+            50% { box-shadow: 0 0 40px rgba(34,197,94,0.6); }
         }
         
         @keyframes shimmer {
             0% { background-position: -1000px 0; }
             100% { background-position: 1000px 0; }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes equalizer {
+            0%, 100% { height: 10px; }
+            50% { height: 30px; }
         }
         
         .animate-fade-in {
@@ -53,6 +66,10 @@
         
         . animate-pulse-glow {
             animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .animate-spin {
+            animation: spin 3s linear infinite;
         }
         
         .tab-content { 
@@ -87,7 +104,7 @@
         }
         
         .glass-card:hover {
-            transform: translateY(-5px);
+            transform:  translateY(-5px);
             border-color: rgba(56, 189, 248, 0.5);
             box-shadow: 0 10px 40px rgba(56, 189, 248, 0.2);
         }
@@ -101,22 +118,16 @@
             animation: shimmer 3s linear infinite;
         }
         
-        . tiktok-container {
+        .tiktok-container {
             position: relative;
             overflow: hidden;
-        }
-        
-        .tiktok-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
         }
         
         details[open] summary ~ * {
             animation: fadeIn 0.3s ease-out;
         }
         
-        .nav-link {
+        . nav-link {
             position: relative;
             transition: all 0.3s ease;
         }
@@ -142,7 +153,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height:  100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
@@ -153,16 +164,126 @@
             border-radius: 50%;
             animation: float 6s ease-in-out infinite;
         }
+        
+        /* Radio Player Styles */
+        .radio-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(56, 189, 248, 0.3);
+            z-index: 100;
+            padding: 1rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .radio-player.hidden {
+            transform: translateY(100%);
+        }
+        
+        .equalizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 30px;
+        }
+        
+        .equalizer-bar {
+            width: 3px;
+            background: linear-gradient(to top, #38bdf8, #818cf8);
+            border-radius: 3px;
+            animation: equalizer 0.8s ease-in-out infinite;
+        }
+        
+        . equalizer-bar:nth-child(1) { animation-delay: 0s; }
+        .equalizer-bar:nth-child(2) { animation-delay: 0.1s; }
+        .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
+        . equalizer-bar:nth-child(4) { animation-delay: 0.3s; }
+        .equalizer-bar:nth-child(5) { animation-delay: 0.4s; }
+        
+        .code-block {
+            background: #000;
+            border-left: 4px solid #38bdf8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .cisco-prompt {
+            color: #10b981;
+        }
+        
+        .cisco-command {
+            color: #38bdf8;
+        }
+        
+        .cisco-comment {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        
+        .cisco-output {
+            color: #fbbf24;
+        }
     </style>
 </head>
 <body>
     <!-- Partículas de fondo -->
     <div class="bg-particles" id="particles"></div>
     
+    <!-- Radio Player Flotante -->
+    <div class="radio-player" id="radioPlayer">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleRadio()" id="playBtn" class="bg-sky-500 hover:bg-sky-600 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all transform hover:scale-110">
+                    <svg id="playIcon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg id="pauseIcon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                    </svg>
+                </button>
+                
+                <div class="equalizer" id="equalizer" style="display: none;">
+                    <div class="equalizer-bar"></div>
+                    <div class="equalizer-bar"></div>
+                    <div class="equalizer-bar"></div>
+                    <div class="equalizer-bar"></div>
+                    <div class="equalizer-bar"></div>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-sky-400">🎵 MexWeb Radio</h3>
+                    <p class="text-xs text-slate-400" id="radioStatus">Click para reproducir</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <input type="range" id="volumeControl" min="0" max="100" value="70" class="w-24 accent-sky-500">
+                <span class="text-sm text-slate-400" id="volumeLabel">70%</span>
+                <button onclick="togglePlayerVisibility()" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Audio Element -->
+    <audio id="radioStream" preload="none">
+        <source src="https://radio.mexweb.me/stream" type="audio/mpeg">
+    </audio>
+    
     <nav class="p-4 border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center animate-slide-in">
             <h1 class="text-xl font-black tracking-tighter">
-                <span class="logo-text">MEXWEB</span><span class="text-white">. ME</span>
+                <span class="logo-text">MEXWEB</span><span class="text-white">.ME</span>
             </h1>
             <div class="flex space-x-4 text-xs font-bold uppercase">
                 <a href="https://radio.mexweb.me/radio.html" class="nav-link hover:text-sky-400">Radio</a>
@@ -172,11 +293,12 @@
         </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto mt-8 px-4 relative z-10">
-        <div class="flex space-x-8 border-b border-slate-800 mb-8 animate-fade-in">
-            <button onclick="openTab('tiktok')" id="btn-tiktok" class="nav-btn active pb-2 font-bold uppercase tracking-widest text-sm">TikTok Feed</button>
-            <button onclick="openTab('configs')" id="btn-configs" class="nav-btn pb-2 font-bold uppercase tracking-widest text-sm">Configuraciones</button>
-            <button onclick="openTab('server')" id="btn-server" class="nav-btn pb-2 font-bold uppercase tracking-widest text-sm">Estado x86</button>
+    <div class="max-w-6xl mx-auto mt-8 px-4 relative z-10 pb-32">
+        <div class="flex space-x-8 border-b border-slate-800 mb-8 animate-fade-in overflow-x-auto">
+            <button onclick="openTab('tiktok')" id="btn-tiktok" class="nav-btn active pb-2 font-bold uppercase tracking-widest text-sm whitespace-nowrap">TikTok Feed</button>
+            <button onclick="openTab('configs')" id="btn-configs" class="nav-btn pb-2 font-bold uppercase tracking-widest text-sm whitespace-nowrap">Configuraciones</button>
+            <button onclick="openTab('cisco')" id="btn-cisco" class="nav-btn pb-2 font-bold uppercase tracking-widest text-sm whitespace-nowrap">Cisco IOS</button>
+            <button onclick="openTab('server')" id="btn-server" class="nav-btn pb-2 font-bold uppercase tracking-widest text-sm whitespace-nowrap">Estado x86</button>
         </div>
 
         <!-- Tab TikTok Feed -->
@@ -186,7 +308,7 @@
                 <p class="text-sky-400 font-mono animate-fade-in">#Linux #x86 #Networking #CloudflareTunnels</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 md: grid-cols-2 lg: grid-cols-3 gap-6 mb-8">
                 <!-- Video 1 - Embed del perfil -->
                 <div class="glass-card rounded-2xl overflow-hidden p-4 tiktok-container">
                     <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@mexwebmx" data-unique-id="mexwebmx" data-embed-type="creator" style="max-width: 780px; min-width: 288px;">
@@ -236,7 +358,7 @@
                     <p class="text-slate-400 mb-3">Visita mi perfil de TikTok para ver todos mis tutoriales</p>
                     <a href="https://www.tiktok.com/@mexwebmx" target="_blank" class="inline-flex items-center bg-gradient-to-r from-pink-500 to-sky-500 hover:from-pink-600 hover:to-sky-600 text-white font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105">
                         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19. 59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3. 45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88. 13V9.4a6.84 6.84 0 0 0-1-. 05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-. 1z"/>
+                            <path d="M19. 59 6. 69a4.83 4.83 0 0 1-3.77-4.25V2h-3. 45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88. 13V9.4a6.84 6.84 0 0 0-1-. 05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-. 1z"/>
                         </svg>
                         @mexwebmx en TikTok
                     </a>
@@ -244,19 +366,23 @@
             </div>
         </div>
 
-        <!-- Tab Configuraciones -->
+        <!-- Tab Configuraciones Linux -->
         <div id="configs" class="tab-content">
-            <h2 class="text-3xl font-bold mb-6 animate-fade-in">🔧 Guías y Scripts</h2>
+            <h2 class="text-3xl font-bold mb-6 animate-fade-in">🔧 Guías y Scripts Linux</h2>
             <div class="space-y-4">
                 <details class="glass-card p-4 rounded-xl cursor-pointer">
                     <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
                         ⚡ Optimizar antiX en equipos antiguos
                     </summary>
-                    <div class="mt-4 p-4 bg-black/50 rounded-lg font-mono text-sm text-green-400 overflow-x-auto">
-                        <p class="text-slate-300 mb-2"># Instalar herramientas de optimización</p>
-                        sudo apt update && sudo apt install preload zram-tools<br><br>
-                        <p class="text-slate-300 mb-2"># Configurar swap en RAM</p>
-                        sudo systemctl enable zramswap
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Mejora el rendimiento de tu sistema antiX con estas herramientas: </p>
+                        <div class="code-block">
+                            <span class="cisco-comment"># Instalar herramientas de optimización</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo apt update && sudo apt install preload zram-tools</span><br><br>
+                            <span class="cisco-comment"># Configurar swap en RAM (más rápido que disco)</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo systemctl enable zramswap</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo systemctl start zramswap</span>
+                        </div>
                     </div>
                 </details>
 
@@ -265,45 +391,442 @@
                         🌐 Configurar Túnel de Cloudflare
                     </summary>
                     <div class="mt-4">
-                        <p class="text-slate-300 mb-3">Usa este comando para exponer tu NAS local de forma segura:</p>
-                        <div class="p-4 bg-black/50 rounded-lg font-mono text-sm text-green-400 overflow-x-auto">
-                            <p class="text-slate-300 mb-2"># Instalar cloudflared</p>
-                            wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb<br>
-                            sudo dpkg -i cloudflared-linux-amd64.deb<br><br>
-                            <p class="text-slate-300 mb-2"># Ejecutar túnel</p>
-                            cloudflared tunnel run --url http://localhost:8080 nombre-tunel
+                        <p class="text-slate-300 mb-3">Expón tu servidor local de forma segura sin abrir puertos:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment"># Descargar cloudflared para Linux x86</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo dpkg -i cloudflared-linux-amd64.deb</span><br><br>
+                            <span class="cisco-comment"># Autenticar con Cloudflare</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">cloudflared tunnel login</span><br><br>
+                            <span class="cisco-comment"># Crear y ejecutar túnel</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">cloudflared tunnel create mi-tunel</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">cloudflared tunnel run --url http://localhost:8080 mi-tunel</span>
                         </div>
                     </div>
                 </details>
 
                 <details class="glass-card p-4 rounded-xl cursor-pointer">
-                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
-                        🎵 Configurar Radio Stream
+                    <summary class="font-bold text-sky-400 cursor-pointer hover: text-sky-300 transition-colors">
+                        🎵 Configurar Radio Stream con Icecast
                     </summary>
                     <div class="mt-4">
-                        <p class="text-slate-300 mb-3">Accede a la radio en:  <a href="https://radio.mexweb.me/radio.html" class="text-sky-400 underline">radio.mexweb.me/radio.html</a></p>
-                        <div class="p-4 bg-black/50 rounded-lg font-mono text-sm text-green-400">
-                            # Instalar Icecast2 para streaming<br>
-                            sudo apt install icecast2<br><br>
-                            # Configurar puerto y contraseña<br>
-                            sudo nano /etc/icecast2/icecast.xml
+                        <p class="text-slate-300 mb-3">Monta tu propia estación de radio en streaming:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment"># Instalar Icecast2</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo apt install icecast2</span><br><br>
+                            <span class="cisco-comment"># Editar configuración</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo nano /etc/icecast2/icecast.xml</span><br><br>
+                            <span class="cisco-comment"># Iniciar servicio</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo systemctl start icecast2</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo systemctl enable icecast2</span><br><br>
+                            <span class="cisco-output">🎵 Accede en:  http://localhost:8000</span>
                         </div>
                     </div>
                 </details>
 
                 <details class="glass-card p-4 rounded-xl cursor-pointer">
-                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
-                        🔒 Seguridad y Firewall
+                    <summary class="font-bold text-sky-400 cursor-pointer hover: text-sky-300 transition-colors">
+                        🔒 Configurar Firewall UFW
                     </summary>
-                    <div class="mt-4 p-4 bg-black/50 rounded-lg font-mono text-sm text-green-400">
-                        # Configurar UFW<br>
-                        sudo apt install ufw<br>
-                        sudo ufw allow ssh<br>
-                        sudo ufw allow 80/tcp<br>
-                        sudo ufw allow 443/tcp<br>
-                        sudo ufw enable
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Protege tu servidor con un firewall básico:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment"># Instalar UFW</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo apt install ufw</span><br><br>
+                            <span class="cisco-comment"># Permitir SSH (¡IMPORTANTE antes de habilitar!)</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo ufw allow ssh</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo ufw allow 22/tcp</span><br><br>
+                            <span class="cisco-comment"># Permitir HTTP y HTTPS</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo ufw allow 80/tcp</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo ufw allow 443/tcp</span><br><br>
+                            <span class="cisco-comment"># Habilitar firewall</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo ufw enable</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo ufw status</span>
+                        </div>
                     </div>
                 </details>
+
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover: text-sky-300 transition-colors">
+                        🖥️ Monitoreo del Sistema
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Herramientas para monitorear recursos del sistema:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment"># Instalar htop (monitor de procesos mejorado)</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo apt install htop</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">htop</span><br><br>
+                            <span class="cisco-comment"># Ver uso de disco</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">df -h</span><br><br>
+                            <span class="cisco-comment"># Ver uso de memoria</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">free -h</span><br><br>
+                            <span class="cisco-comment"># Ver temperatura (si está disponible)</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sudo apt install lm-sensors</span><br>
+                            <span class="cisco-prompt">$</span> <span class="cisco-command">sensors</span>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <!-- Tab Cisco IOS -->
+        <div id="cisco" class="tab-content">
+            <h2 class="text-3xl font-bold mb-6 animate-fade-in">🔌 Configuraciones Cisco IOS</h2>
+            
+            <div class="glass-card p-6 rounded-2xl mb-6">
+                <h3 class="text-xl font-bold text-sky-400 mb-3">📘 Guía Básica de Comandos Cisco</h3>
+                <p class="text-slate-300">Comandos esenciales para configurar routers y switches Cisco desde cero.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Configuración Inicial -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🚀 Configuración Inicial del Router
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Pasos básicos al encender un router Cisco por primera vez:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">!  Entrar al modo privilegiado</span><br>
+                            <span class="cisco-prompt">Router></span> <span class="cisco-command">enable</span><br>
+                            <span class="cisco-prompt">Router#</span><br><br>
+                            
+                            <span class="cisco-comment">! Entrar al modo de configuración global</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">configure terminal</span><br>
+                            <span class="cisco-prompt">Router(config)#</span><br><br>
+                            
+                            <span class="cisco-comment">! Cambiar el nombre del router</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">hostname MexWebRouter</span><br>
+                            <span class="cisco-prompt">MexWebRouter(config)#</span><br><br>
+                            
+                            <span class="cisco-comment">! Desactivar búsqueda DNS (evita esperas en errores)</span><br>
+                            <span class="cisco-prompt">MexWebRouter(config)#</span> <span class="cisco-command">no ip domain-lookup</span><br><br>
+                            
+                            <span class="cisco-comment">! Guardar configuración</span><br>
+                            <span class="cisco-prompt">MexWebRouter#</span> <span class="cisco-command">write memory</span><br>
+                            <span class="cisco-output">Building configuration.. .[OK]</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Seguridad Básica -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🔐 Configurar Contraseñas de Seguridad
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Protege el acceso a tu router con contraseñas encriptadas:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Contraseña para modo privilegiado (enable) - ENCRIPTADA</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">enable secret Cisco123!</span><br><br>
+                            
+                            <span class="cisco-comment">! Encriptar todas las contraseñas en texto plano</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">service password-encryption</span><br><br>
+                            
+                            <span class="cisco-comment">! Configurar contraseña para consola</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">line console 0</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">password Consola123</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">login</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">exit</span><br><br>
+                            
+                            <span class="cisco-comment">! Configurar contraseña para Telnet (VTY)</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">line vty 0 4</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">password Telnet123</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">login</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">exit</span>
+                        </div>
+                        <div class="mt-3 p-3 bg-yellow-900/30 border-l-4 border-yellow-500 rounded">
+                            <p class="text-yellow-300 text-sm"><strong>⚠️ Importante:</strong> <code>enable secret</code> usa encriptación MD5, mientras que <code>enable password</code> usa encriptación débil.  Siempre usa <code>secret</code>.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Banner MOTD -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        📢 Crear Banner MOTD (Message of the Day)
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Mensaje de advertencia legal que aparece al conectarse:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Crear banner con delimitador #</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">banner motd #</span><br>
+                            <span class="cisco-output">*********************************************</span><br>
+                            <span class="cisco-output">*    ACCESO AUTORIZADO SOLAMENTE           *</span><br>
+                            <span class="cisco-output">*    MexWeb Network - Router Principal     *</span><br>
+                            <span class="cisco-output">*    Acceso no autorizado está prohibido   *</span><br>
+                            <span class="cisco-output">*********************************************</span><br>
+                            <span class="cisco-command">#</span><br><br>
+                            
+                            <span class="cisco-comment">! También puedes usar otros delimitadores</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">banner login $</span><br>
+                            <span class="cisco-output">Ingrese sus credenciales para acceder</span><br>
+                            <span class="cisco-command">$</span>
+                        </div>
+                        <div class="mt-3 p-3 bg-blue-900/30 border-l-4 border-blue-500 rounded">
+                            <p class="text-blue-300 text-sm"><strong>💡 Tip:</strong> El banner MOTD es importante legalmente.  Indica que el acceso no autorizado es ilegal y protege a la organización.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Configurar Interfaces -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🔌 Configurar Interfaces de Red
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Asignar IP y activar interfaces físicas:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Configurar interfaz GigabitEthernet 0/0</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">interface gigabitEthernet 0/0</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">description Enlace a LAN Principal</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">ip address 192.168.1.1 255.255.255.0</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">no shutdown</span><br>
+                            <span class="cisco-output">%LINK-5-CHANGED:  Interface GigabitEthernet0/0, changed state to up</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">exit</span><br><br>
+                            
+                            <span class="cisco-comment">! Configurar interfaz Serial 0/0/0</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">interface serial 0/0/0</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">description WAN hacia ISP</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">ip address 200.100.50.2 255.255.255.252</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">clock rate 64000</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">no shutdown</span><br>
+                            <span class="cisco-prompt">Router(config-if)#</span> <span class="cisco-command">exit</span>
+                        </div>
+                        <div class="mt-3 p-3 bg-blue-900/30 border-l-4 border-blue-500 rounded">
+                            <p class="text-blue-300 text-sm"><strong>💡 Tip:</strong> <code>no shutdown</code> activa la interfaz.  Por defecto, todas las interfaces están apagadas (<em>administratively down</em>).</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Show Running Config -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        👁️ Comandos Show - Verificar Configuración
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Comandos esenciales para ver el estado y configuración: </p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Ver configuración actual en RAM (la que está corriendo)</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show running-config</span><br>
+                            <span class="cisco-output">Building configuration... </span><br>
+                            <span class="cisco-output">Current configuration : 1234 bytes</span><br>
+                            <span class="cisco-output">! </span><br>
+                            <span class="cisco-output">hostname MexWebRouter</span><br>
+                            <span class="cisco-output">... </span><br><br>
+                            
+                            <span class="cisco-comment">! Ver configuración guardada en NVRAM</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show startup-config</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver resumen de todas las interfaces</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show ip interface brief</span><br>
+                            <span class="cisco-output">Interface         IP-Address      Status      Protocol</span><br>
+                            <span class="cisco-output">GigabitEthernet0/0 192.168.1.1    up          up</span><br>
+                            <span class="cisco-output">Serial0/0/0       200.100.50.2    up          up</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver detalles de una interfaz específica</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show interface gigabitEthernet 0/0</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver tabla de enrutamiento</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show ip route</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver versión de IOS</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show version</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Guardar Configuración -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        💾 Guardar y Respaldar Configuración
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Métodos para guardar tu configuración permanentemente:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Método 1: Comando copy (recomendado)</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">copy running-config startup-config</span><br>
+                            <span class="cisco-output">Destination filename [startup-config]? </span> <br>
+                            <span class="cisco-output">Building configuration...</span><br>
+                            <span class="cisco-output">[OK]</span><br><br>
+                            
+                            <span class="cisco-comment">! Método 2: Comando write (atajo)</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">write memory</span><br>
+                            <span class="cisco-output">Building configuration...</span><br>
+                            <span class="cisco-output">[OK]</span><br><br>
+                            
+                            <span class="cisco-comment">! Método 3: Atajo abreviado</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">wr</span><br><br>
+                            
+                            <span class="cisco-comment">! Respaldar config a servidor TFTP</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">copy running-config tftp:</span><br>
+                            <span class="cisco-output">Address or name of remote host []?</span> <span class="cisco-command">192.168.1.100</span><br>
+                            <span class="cisco-output">Destination filename [router-confg]?</span> <span class="cisco-command">backup-config</span>
+                        </div>
+                        <div class="mt-3 p-3 bg-red-900/30 border-l-4 border-red-500 rounded">
+                            <p class="text-red-300 text-sm"><strong>⚠️ Importante:</strong> Si reinicias el router sin guardar con <code>copy run start</code>, perderás todos los cambios.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Rutas Estáticas -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🛣️ Configurar Rutas Estáticas
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Configurar enrutamiento básico entre redes:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Sintaxis: ip route [red-destino] [máscara] [next-hop o interfaz-salida]</span><br><br>
+                            
+                            <span class="cisco-comment">! Ruta estática usando next-hop (IP del siguiente router)</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">ip route 10.0.0.0 255.0.0.0 200.100.50.1</span><br><br>
+                            
+                            <span class="cisco-comment">! Ruta estática usando interfaz de salida</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">ip route 172.16.0.0 255.255.0.0 serial 0/0/0</span><br><br>
+                            
+                            <span class="cisco-comment">! Ruta por defecto (gateway de último recurso)</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">ip route 0.0.0.0 0.0.0.0 200.100.50.1</span><br><br>
+                            
+                            <span class="cisco-comment">! Verificar tabla de enrutamiento</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show ip route</span><br>
+                            <span class="cisco-output">Codes: C - connected, S - static, ... </span><br>
+                            <span class="cisco-output">S    10.0.0.0/8 [1/0] via 200.100.50.1</span><br>
+                            <span class="cisco-output">S*   0.0.0.0/0 [1/0] via 200.100.50.1</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- SSH Configuration -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🔐 Habilitar SSH (Acceso Seguro Remoto)
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Configurar SSH en lugar de Telnet para acceso remoto seguro:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Configurar nombre de dominio (requerido para SSH)</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">ip domain-name mexweb.me</span><br><br>
+                            
+                            <span class="cisco-comment">! Crear usuario local</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">username admin privilege 15 secret Admin123! </span><br><br>
+                            
+                            <span class="cisco-comment">! Generar llaves RSA (mínimo 1024 bits)</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">crypto key generate rsa</span><br>
+                            <span class="cisco-output">How many bits in the modulus [512]: </span> <span class="cisco-command">2048</span><br>
+                            <span class="cisco-output">% Generating 2048 bit RSA keys, keys will be non-exportable.. .[OK]</span><br><br>
+                            
+                            <span class="cisco-comment">!  Configurar versión de SSH</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">ip ssh version 2</span><br><br>
+                            
+                            <span class="cisco-comment">! Configurar líneas VTY para usar SSH</span><br>
+                            <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">line vty 0 4</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">transport input ssh</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">login local</span><br>
+                            <span class="cisco-prompt">Router(config-line)#</span> <span class="cisco-command">exit</span><br><br>
+                            
+                            <span class="cisco-comment">! Verificar SSH</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show ip ssh</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- VLAN Básico -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🏢 Configurar VLANs en Switch
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Crear VLANs para segmentar redes lógicamente:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Crear VLAN 10</span><br>
+                            <span class="cisco-prompt">Switch(config)#</span> <span class="cisco-command">vlan 10</span><br>
+                            <span class="cisco-prompt">Switch(config-vlan)#</span> <span class="cisco-command">name Administracion</span><br>
+                            <span class="cisco-prompt">Switch(config-vlan)#</span> <span class="cisco-command">exit</span><br><br>
+                            
+                            <span class="cisco-comment">! Crear VLAN 20</span><br>
+                            <span class="cisco-prompt">Switch(config)#</span> <span class="cisco-command">vlan 20</span><br>
+                            <span class="cisco-prompt">Switch(config-vlan)#</span> <span class="cisco-command">name Empleados</span><br>
+                            <span class="cisco-prompt">Switch(config-vlan)#</span> <span class="cisco-command">exit</span><br><br>
+                            
+                            <span class="cisco-comment">! Asignar puerto a VLAN 10</span><br>
+                            <span class="cisco-prompt">Switch(config)#</span> <span class="cisco-command">interface fastEthernet 0/1</span><br>
+                            <span class="cisco-prompt">Switch(config-if)#</span> <span class="cisco-command">switchport mode access</span><br>
+                            <span class="cisco-prompt">Switch(config-if)#</span> <span class="cisco-command">switchport access vlan 10</span><br>
+                            <span class="cisco-prompt">Switch(config-if)#</span> <span class="cisco-command">exit</span><br><br>
+                            
+                            <span class="cisco-comment">! Configurar puerto trunk (pasa todas las VLANs)</span><br>
+                            <span class="cisco-prompt">Switch(config)#</span> <span class="cisco-command">interface gigabitEthernet 0/1</span><br>
+                            <span class="cisco-prompt">Switch(config-if)#</span> <span class="cisco-command">switchport mode trunk</span><br>
+                            <span class="cisco-prompt">Switch(config-if)#</span> <span class="cisco-command">switchport trunk allowed vlan all</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver VLANs configuradas</span><br>
+                            <span class="cisco-prompt">Switch#</span> <span class="cisco-command">show vlan brief</span>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Troubleshooting -->
+                <details class="glass-card p-4 rounded-xl cursor-pointer">
+                    <summary class="font-bold text-sky-400 cursor-pointer hover:text-sky-300 transition-colors">
+                        🔧 Comandos de Troubleshooting
+                    </summary>
+                    <div class="mt-4">
+                        <p class="text-slate-300 mb-3">Herramientas para diagnosticar problemas de red:</p>
+                        <div class="code-block">
+                            <span class="cisco-comment">! Ping para verificar conectividad</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">ping 8.8.8.8</span><br>
+                            <span class="cisco-output">Type escape sequence to abort.</span><br>
+                            <span class="cisco-output">!! !!!   &lt;- 5 signos de exclamación = éxito</span><br><br>
+                            
+                            <span class="cisco-comment">! Traceroute para ver ruta de paquetes</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">traceroute 8.8.8.8</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver tabla ARP</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show arp</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver estadísticas de interfaz</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show interfaces gigabitEthernet 0/0</span><br><br>
+                            
+                            <span class="cisco-comment">!  Limpiar contadores de interfaz</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">clear counters</span><br><br>
+                            
+                            <span class="cisco-comment">! Ver protocolos activos</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">show ip protocols</span><br><br>
+                            
+                            <span class="cisco-comment">! Debug (usar con cuidado en producción)</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">debug ip routing</span><br>
+                            <span class="cisco-prompt">Router#</span> <span class="cisco-command">undebug all</span> <span class="cisco-comment">&lt;- Desactivar todos los debugs</span>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Cheat Sheet -->
+            <div class="glass-card p-6 rounded-2xl mt-6">
+                <h3 class="text-xl font-bold text-sky-400 mb-4">📋 Cheat Sheet - Modos de Cisco IOS</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">Modo Usuario</h4>
+                        <code class="text-sm">Router&gt;</code>
+                        <p class="text-slate-400 text-sm mt-1">Solo comandos de visualización básicos</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">Modo Privilegiado</h4>
+                        <code class="text-sm">Router#</code>
+                        <p class="text-slate-400 text-sm mt-1">Todos los comandos show, debug, copy, etc.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">Modo Configuración Global</h4>
+                        <code class="text-sm">Router(config)#</code>
+                        <p class="text-slate-400 text-sm mt-1">Configurar hostname, rutas, usuarios, etc.</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">Modo Configuración Interfaz</h4>
+                        <code class="text-sm">Router(config-if)#</code>
+                        <p class="text-slate-400 text-sm mt-1">Configurar IPs, activar interfaces, etc.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -315,7 +838,7 @@
             <h2 class="text-3xl font-bold mb-2">Servidor x86 Online</h2>
             <p class="text-slate-400 text-lg mb-8">Corriendo sobre antiX Linux vía Cloudflare Tunnel</p>
             
-            <div class="grid grid-cols-1 md: grid-cols-3 gap-6 max-w-3xl mx-auto mt-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mt-8">
                 <div class="glass-card p-6 rounded-xl">
                     <div class="text-3xl mb-2">⚙️</div>
                     <h3 class="font-bold text-sky-400">Sistema</h3>
@@ -336,11 +859,11 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-16 mb-8 text-center text-slate-500 text-sm relative z-10">
-        <p>© 2025 MexWeb.me | Powered by antiX Linux & Cloudflare</p>
+    <footer class="mt-16 mb-8 pb-24 text-center text-slate-500 text-sm relative z-10">
+        <p>© 2025 MexWeb. me | Powered by antiX Linux & Cloudflare</p>
         <p class="mt-2">
             <a href="https://www.tiktok.com/@mexwebmx" target="_blank" class="hover:text-sky-400 transition-colors">TikTok</a> • 
-            <a href="https://radio.mexweb.me/radio.html" class="hover:text-sky-400 transition-colors">Radio</a> • 
+            <a href="https://radio.mexweb.me/radio. html" class="hover:text-sky-400 transition-colors">Radio</a> • 
             <a href="https://nas.mexweb.me" class="hover:text-sky-400 transition-colors">NAS</a>
         </p>
     </footer>
@@ -348,38 +871,56 @@
     <!-- Scripts -->
     <script async src="https://www.tiktok.com/embed.js"></script>
     <script>
+        // Variables globales
+        let isPlaying = false;
+        const audio = document.getElementById('radioStream');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const radioStatus = document.getElementById('radioStatus');
+        const equalizer = document.getElementById('equalizer');
+        const volumeControl = document.getElementById('volumeControl');
+        const volumeLabel = document.getElementById('volumeLabel');
+        
+        // Control de reproducción
+        function toggleRadio() {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    radioStatus.textContent = '🎵 Reproduciendo... ';
+                    equalizer.style.display = 'flex';
+                }).catch(err => {
+                    console.error('Error al reproducir:', err);
+                    radioStatus.textContent = '❌ Error al conectar';
+                });
+            } else {
+                audio.pause();
+                isPlaying = false;
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                radioStatus.textContent = 'Click para reproducir';
+                equalizer.style.display = 'none';
+            }
+        }
+        
+        // Control de volumen
+        volumeControl.addEventListener('input', (e) => {
+            const volume = e.target.value / 30;
+            audio.volume = volume;
+            volumeLabel.textContent = e.target.value + '%';
+        });
+        
+        // Inicializar volumen
+        audio.volume = 0.7;
+        
+        // Ocultar/mostrar player
+        function togglePlayerVisibility() {
+            const player = document.getElementById('radioPlayer');
+            player.classList.toggle('hidden');
+        }
+        
+        // Tabs
         function openTab(tabName) {
-            var i, tabcontent, navbtn;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) { 
-                tabcontent[i].classList.remove("active"); 
-            }
-            navbtn = document.getElementsByClassName("nav-btn");
-            for (i = 0; i < navbtn.length; i++) { 
-                navbtn[i].classList.remove("active"); 
-            }
-            document.getElementById(tabName).classList.add("active");
-            document.getElementById("btn-" + tabName).classList.add("active");
-        }
-        
-        // Crear partículas animadas en el fondo
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 150 + 50;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle. style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 6 + 6) + 's';
-                container.appendChild(particle);
-            }
-        }
-        
-        createParticles();
-    </script>
-</body>
-</html>
+            var
