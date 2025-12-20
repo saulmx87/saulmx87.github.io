@@ -1,3 +1,4 @@
+```html name=index.html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,11 +8,23 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+      background: url('datacenter-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
       color: #e2e8f0;
       font-family: "Inter", sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(2, 6, 23, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);
+      z-index: -1;
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -42,6 +55,11 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     details[open] summary ~ * { animation: fadeIn 0.3s ease-out; }
     details summary { list-style: none; outline: none; }
@@ -98,8 +116,11 @@
 
   <nav class="p-4 bg-slate-900/50 relative z-40">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 animate-slide-in">
-      <h1 class="text-3xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">
-        <span class="logo-text">MEXWEB</span><span class="text-white">.ME</span>
+      <h1 class="text-3xl font-black tracking-tighter cursor-pointer flex items-center gap-3" onclick="location.reload()">
+        <img src="logo-mexweb.png" alt="MexWeb Logo" class="w-10 h-10 rounded-full border-2 border-sky-400 shadow-lg">
+        <span>
+          <span class="logo-text">MEXWEB</span><span class="text-white">.ME</span>
+        </span>
       </h1>
       <div class="flex space-x-6 text-sm font-bold uppercase tracking-wide">
         <a href="https://radio.mexweb.me/radio.html" target="_blank" class="nav-link">Radio Web</a>
@@ -764,7 +785,7 @@
             <h3 class="text-xl font-bold text-white flex items-center gap-2">
               <span>📦</span> VirtualBox
             </h3>
-            <p class="text-xs text-slate-400 mt-1">Virtualización para tus laboratorios de Linux y Windows.</p>
+            <p class="text-sm text-slate-400 mt-1">Virtualización para tus laboratorios de Linux y Windows.</p>
           </header>
           <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
             <span>Win / macOS / Linux</span>
