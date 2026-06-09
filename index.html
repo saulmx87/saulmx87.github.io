@@ -18,10 +18,7 @@
     body::before {
       content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, rgba(2, 6, 23, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);
       z-index: -1;
     }
@@ -31,60 +28,53 @@
     .animate-fade-in { animation: fadeIn 0.6s ease-out; }
     .animate-slide-in { animation: slideIn 0.8s ease-out; }
     .animate-float { animation: float 3s ease-in-out infinite; }
+    
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.5s ease-out; }
     .nav-btn { transition: all 0.3s ease; position: relative; cursor: pointer; }
     .nav-btn.active { border-bottom: 2px solid #38bdf8; color: #38bdf8; }
     .nav-btn:hover { color: #38bdf8; transform: translateY(-2px); }
+    
     .glass-card {
-      background: rgba(30, 41, 59, 0.5);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      transition: all 0.4s ease;
+      background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(10px);
+      border: 1px solid rgba(56, 189, 248, 0.2); transition: all 0.4s ease;
     }
     .glass-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(56, 189, 248, 0.5);
+      transform: translateY(-2px); border-color: rgba(56, 189, 248, 0.5);
       box-shadow: 0 10px 40px rgba(56, 189, 248, 0.2);
     }
     .logo-text {
       background: linear-gradient(90deg, #38bdf8, #818cf8, #38bdf8);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      background-size: 200% auto; -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text;
       animation: shimmer 3s linear infinite;
     }
-    @keyframes shimmer {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    
     details[open] summary ~ * { animation: fadeIn 0.3s ease-out; }
     details summary { list-style: none; outline: none; }
     details summary::-webkit-details-marker { display: none; }
+    
     .nav-link { position: relative; transition: all 0.3s ease; }
     .nav-link:hover { color: #38bdf8; }
+    
     .radio-player {
       position: fixed; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(56, 189, 248, 0.3);
-      z-index: 100; padding: 1rem;
-      transform: translateY(0);
-      transition: transform 0.3s ease;
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(56, 189, 248, 0.3); z-index: 100; padding: 1rem;
+      transform: translateY(0); transition: transform 0.3s ease;
     }
     .radio-player.hidden { transform: translateY(100%); }
     .equalizer { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
     .equalizer-bar {
       width: 3px; background: linear-gradient(to top, #38bdf8, #818cf8);
-      border-radius: 3px;
-      animation: equalizer 0.8s ease-in-out infinite;
+      border-radius: 3px; animation: equalizer 0.8s ease-in-out infinite;
     }
     .equalizer-bar:nth-child(1) { animation-delay: 0s; }
     .equalizer-bar:nth-child(2) { animation-delay: 0.1s; }
     .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
     @keyframes equalizer { 0%,100%{height:5px} 50%{height:25px} }
+    
     .code-block {
       background: #0f172a; border-left: 4px solid #38bdf8;
       padding: 1rem; border-radius: 0.5rem; overflow-x: auto;
@@ -96,17 +86,29 @@
     .cisco-comment { color: #64748b; font-style: italic; }
     .cisco-output { color: #fbbf24; }
     .cisco-param { color: #f472b6; }
+    
+    /* Scroll para Iframe */
+    .custom-scroll::-webkit-scrollbar { width: 8px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 10px; }
   </style>
 </head>
 <body>
   
   <section class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur">
-    <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between text-sm">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex flex-col md:flex-row items-center justify-between text-sm gap-2">
       <div class="flex items-center gap-2">
         <span class="animate-pulse text-green-500">●</span>
         <span class="text-sky-400 font-bold">Radio status: Online!</span>
         <span id="autoStatus" class="text-slate-400 hidden md:inline">- Conectando...</span>
       </div>
+      
+      <div class="flex items-center gap-3 text-xs font-mono text-slate-400 bg-slate-800/50 px-3 py-1 rounded">
+        <span>📍 <span id="visitor-city" class="text-sky-300">Cargando...</span></span>
+        <span>🌡️ <span id="visitor-weather" class="text-emerald-300">--°C</span></span>
+        <span>🕒 <span id="visitor-time" class="text-slate-300">--:--</span></span>
+      </div>
+
       <button id="unmuteTopBtn" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-1 rounded-full text-xs font-bold transition-all animate-bounce hidden">
         🔊 DALE PLAY
       </button>
@@ -116,7 +118,7 @@
   <nav class="p-4 bg-slate-900/50 relative z-40">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 animate-slide-in">
       <h1 class="text-3xl font-black tracking-tighter cursor-pointer flex items-center gap-3" onclick="location.reload()">
-        <img src="logo-mexweb.png" alt="MexWeb Logo" class="w-10 h-10 rounded-full border-2 border-sky-400 shadow-lg">
+        <img src="logo-mexweb.png" alt="MexWeb Logo" class="w-10 h-10 rounded-full border-2 border-sky-400 shadow-lg" onerror="this.src='https://via.placeholder.com/40'">
         <span>
           <span class="logo-text">MEXWEB</span><span class="text-white"> ¡Estableciendo Conexiones!</span>
         </span>
@@ -126,7 +128,7 @@
         <a href="https://www.tiktok.com/@mexwebmx" target="_blank" class="nav-link">TikTok</a>
         <a href="https://nas.mexweb.me" target="_blank" class="nav-link">File Browser</a>
         <a href="https://terminal.mexweb.me" target="_blank" class="nav-link">SSH</a>
-		<a href="https://spotify.mexweb.me" target="_blank" class="nav-link">MUSICA</a>
+        <a href="https://spotify.mexweb.me" target="_blank" class="nav-link">MUSICA</a>
       </div>
     </div>
   </nav>
@@ -136,14 +138,11 @@
       <div class="text-6xl animate-float">📡</div>
       <div>
         <h3 class="text-3xl font-bold text-white mb-2">Explorando Redes y Tecnología</h3>
-        <p class="text-slate-400 text-lg">
-          Recursos técnicos, configuraciones rápidas e informacion para estudiantes e informaticos.
-        </p>
+        <p class="text-slate-400 text-lg">Recursos técnicos, configuraciones rápidas e informacion para estudiantes e informaticos.</p>
       </div>
     </div>
   </header>
 
-  <!-- Nueva sección de biografía del creador -->
   <section class="max-w-6xl mx-auto px-4 mb-10 relative z-10 animate-fade-in">
     <div class="glass-card rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8">
       <div class="text-center md:text-left">
@@ -153,7 +152,7 @@
         </p>
       </div>
       <div class="flex-shrink-0">
-        <img src="bio.jpg" alt="Saul Mercado - Creador de MexWeb" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-sky-400 shadow-2xl animate-float object-cover mx-auto">
+        <img src="bio.jpg" alt="Saul Mercado" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-sky-400 shadow-2xl animate-float object-cover mx-auto" onerror="this.src='https://via.placeholder.com/150'">
       </div>
     </div>
   </section>
@@ -167,11 +166,11 @@
       <button onclick="switchTab('mikrotik')" id="tab-btn-mikrotik" class="nav-btn text-lg font-bold px-4 py-2">MIKROTIK</button>
       <button onclick="switchTab('iot')" id="tab-btn-iot" class="nav-btn text-lg font-bold px-4 py-2">IoT / ESP32</button>
       <button onclick="switchTab('sysadmin')" id="tab-btn-sysadmin" class="nav-btn text-lg font-bold px-4 py-2">SYSADMIN / REPAIR</button>
-      <!-- Nueva pestaña DESCARGAS -->
       <button onclick="switchTab('downloads')" id="tab-btn-downloads" class="nav-btn text-lg font-bold px-4 py-2">DESCARGAS</button>
+      
+      <button onclick="switchTab('peliculas')" id="tab-btn-peliculas" class="nav-btn text-lg font-bold px-4 py-2 text-purple-400">🎬 CINE</button>
     </div>
 
-    <!-- TikTok -->
     <section id="tiktok" class="tab-content active">
       <div class="text-center mb-10">
         <h2 class="text-4xl font-bold mb-2">Feed Reciente</h2>
@@ -192,722 +191,100 @@
       </div>
     </section>
 
-    <!-- Cisco IOS -->
-    <section id="cisco" class="tab-content">
-      <h2 class="text-3xl font-bold mb-6 text-sky-400 flex items-center gap-2">
-        <span class="text-white">🔌</span> Configuraciones Cisco
-      </h2>
-      <p class="text-slate-400 mb-8">Guía rápida de comandos esenciales para Routers y Switches Cisco.</p>
-
-      <div class="space-y-4">
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🚀 1. Configuración Básica al Iniciar
-            <span class="text-slate-500 text-sm">Hostname, DNS</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              <span class="cisco-comment">! Entrar al modo de configuración global</span><br>
-              <span class="cisco-prompt">Router></span> <span class="cisco-command">enable</span><br>
-              <span class="cisco-prompt">Router#</span> <span class="cisco-command">configure terminal</span><br><br>
-              <span class="cisco-comment">! Asignar nombre y quitar DNS</span><br>
-              <span class="cisco-prompt">Router(config)#</span> <span class="cisco-command">hostname</span> <span class="cisco-param">MexWeb-R1</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">no ip domain-lookup</span><br><br>
-              <span class="cisco-comment">! Sincronizar logs</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">line console 0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">logging synchronous</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🔐 2. Seguridad (Passwords)
-            <span class="text-slate-500 text-sm">Console, Secret</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              <span class="cisco-comment">! Contraseña privilegiada (MD5)</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">enable secret</span> <span class="cisco-param">Cisco123!</span><br><br>
-              <span class="cisco-comment">! Encriptar passwords planos</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">service password-encryption</span><br><br>
-              <span class="cisco-comment">! Consola</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">line console 0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">password</span> <span class="cisco-param">PassConsola</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-line)#</span> <span class="cisco-command">login</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            📢 3. Banner MOTD
-            <span class="text-slate-500 text-sm">Mensaje bienvenida</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">banner motd #</span><br>
-              <span class="cisco-output">*****************************************</span><br>
-              <span class="cisco-output">* PROPIEDAD DE MEXWEB - ACCESO RESTRINGIDO *</span><br>
-              <span class="cisco-output">*****************************************</span><br>
-              <span class="cisco-command">#</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🔌 4. Interfaces
-            <span class="text-slate-500 text-sm">IP, No Shutdown</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              <span class="cisco-prompt">MexWeb-R1(config)#</span> <span class="cisco-command">interface g0/0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">ip address</span> <span class="cisco-param">192.168.10.1 255.255.255.0</span><br>
-              <span class="cisco-prompt">MexWeb-R1(config-if)#</span> <span class="cisco-command">no shutdown</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            👁️ 5. Verificación (Show)
-            <span class="text-slate-500 text-sm">Running-config, Brief</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show running-config</span><br>
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">show ip interface brief</span><br>
-              <span class="cisco-prompt">MexWeb-R1#</span> <span class="cisco-command">copy running-config startup-config</span>
-            </div>
-          </div>
-        </details>
-
-        <!-- 5 entradas extra para llegar a 10 -->
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🔒 6. SSH Seguro
-            <span class="text-slate-500 text-sm">RSA, VTY</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              Router(config)# <span class="cisco-command">ip domain-name</span> <span class="cisco-param">mexweb.me</span><br>
-              Router(config)# <span class="cisco-command">username admin privilege 15 secret</span> <span class="cisco-param">Admin123!</span><br>
-              Router(config)# <span class="cisco-command">crypto key generate rsa</span> (2048)<br>
-              Router(config)# <span class="cisco-command">ip ssh version 2</span><br>
-              Router(config)# <span class="cisco-command">line vty 0 4</span><br>
-              Router(config-line)# <span class="cisco-command">transport input ssh</span><br>
-              Router(config-line)# <span class="cisco-command">login local</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🌐 7. Ruta estática + Default
-            <span class="text-slate-500 text-sm">ip route</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              Router(config)# <span class="cisco-command">ip route</span> <span class="cisco-param">10.0.0.0 255.0.0.0 200.100.50.1</span><br>
-              Router(config)# <span class="cisco-command">ip route</span> <span class="cisco-param">0.0.0.0 0.0.0.0 200.100.50.1</span><br>
-              Router# <span class="cisco-command">show ip route</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🏢 8. VLAN en Switch
-            <span class="text-slate-500 text-sm">access / trunk</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              Switch(config)# <span class="cisco-command">vlan</span> <span class="cisco-param">10</span><br>
-              Switch(config-vlan)# <span class="cisco-command">name</span> <span class="cisco-param">Admin</span><br>
-              Switch(config)# <span class="cisco-command">interface fa0/1</span><br>
-              Switch(config-if)# <span class="cisco-command">switchport mode access</span><br>
-              Switch(config-if)# <span class="cisco-command">switchport access vlan 10</span><br><br>
-              Switch(config)# <span class="cisco-command">interface gi0/1</span><br>
-              Switch(config-if)# <span class="cisco-command">switchport mode trunk</span><br>
-              Switch(config-if)# <span class="cisco-command">switchport trunk allowed vlan all</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            📊 9. QoS Rápido
-            <span class="text-slate-500 text-sm">class-map/policy</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              Router(config)# <span class="cisco-command">class-map match-any</span> <span class="cisco-param">VOICE</span><br>
-              Router(config-cmap)# <span class="cisco-command">match ip dscp ef</span><br>
-              Router(config)# <span class="cisco-command">policy-map</span> <span class="cisco-param">QOS-WAN</span><br>
-              Router(config-pmap)# <span class="cisco-command">class</span> <span class="cisco-param">VOICE</span><br>
-              Router(config-pmap-c)# <span class="cisco-command">priority</span> <span class="cisco-param">1000</span><br>
-              Router(config)# <span class="cisco-command">interface</span> <span class="cisco-param">s0/0/0</span><br>
-              Router(config-if)# <span class="cisco-command">service-policy output</span> <span class="cisco-param">QOS-WAN</span>
-            </div>
-          </div>
-        </details>
-
-        <details class="glass-card p-5 rounded-xl cursor-pointer group">
-          <summary class="text-xl font-bold text-sky-300 group-hover:text-sky-200 flex justify-between items-center">
-            🛠️ 10. Troubleshooting
-            <span class="text-slate-500 text-sm">ping, traceroute</span>
-          </summary>
-          <div class="mt-4 animate-fade-in">
-            <div class="code-block">
-              Router# <span class="cisco-command">ping 8.8.8.8</span><br>
-              Router# <span class="cisco-command">traceroute 8.8.8.8</span><br>
-              Router# <span class="cisco-command">show arp</span><br>
-              Router# <span class="cisco-command">show interfaces</span><br>
-              Router# <span class="cisco-command">clear counters</span>
-            </div>
-          </div>
-        </details>
+    <section id="peliculas" class="tab-content">
+      <div class="flex justify-between items-center mb-6">
+          <h2 class="text-3xl font-bold text-purple-400 flex items-center gap-2">
+            <span>🎬</span> Directorio de Películas
+          </h2>
+          <span class="text-sm font-mono text-slate-500 bg-slate-900 px-3 py-1 rounded border border-slate-700">files.mexweb.me/peliculas</span>
+      </div>
+      
+      <div class="glass-card w-full h-[600px] overflow-hidden relative rounded-xl border border-purple-500/20 shadow-2xl">
+          <iframe 
+              src="https://files.mexweb.me/peliculas/" 
+              class="absolute top-0 left-0 w-full h-full border-0 custom-scroll bg-slate-950"
+              allow="autoplay; fullscreen">
+          </iframe>
       </div>
     </section>
 
-    <!-- Linux & Servidores (AMPLIADO) -->
+    <section id="cisco" class="tab-content">
+      <h2 class="text-3xl font-bold mb-6 text-sky-400 flex items-center gap-2"><span class="text-white">🔌</span> Configuraciones Cisco</h2>
+      <div class="space-y-4">
+        <details class="glass-card p-5 rounded-xl cursor-pointer"><summary class="text-xl font-bold text-sky-300">🚀 1. Configuración Básica</summary><div class="code-block mt-4">Router> enable</div></details>
+      </div>
+    </section>
+
     <section id="linux" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400">🐧 Linux & Servidores</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- 1) Cloudflare Tunnel -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Cloudflare Tunnel</h3>
-          <p class="text-sm text-slate-400 mb-2">Expón tu servidor local con un túnel seguro.</p>
-          <div class="code-block text-xs">
-            $ cloudflared tunnel login<br>
-            $ cloudflared tunnel create <span class="cisco-param">nas</span><br>
-            $ cloudflared tunnel route dns <span class="cisco-param">nas nas.mexweb.me</span><br>
-            $ cloudflared tunnel run <span class="cisco-param">nas</span>
-          </div>
-        </div>
-
-        <!-- 2) Mantenimiento rápido Debian/Ubuntu -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Mantenimiento rápido (Debian/Ubuntu)</h3>
-          <p class="text-sm text-slate-400 mb-2">Actualiza paquetes y limpia lo que no se usa.</p>
-          <div class="code-block text-xs">
-            $ sudo apt update && sudo apt upgrade -y<br>
-            $ sudo apt autoremove -y && sudo apt autoclean
-          </div>
-        </div>
-
-        <!-- 3) Usuarios y sudo -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Usuarios y permisos sudo</h3>
-          <p class="text-sm text-slate-400 mb-2">Crear usuario admin para administrar el servidor.</p>
-          <div class="code-block text-xs">
-            $ sudo adduser <span class="cisco-param">admin</span><br>
-            $ sudo usermod -aG sudo <span class="cisco-param">admin</span><br>
-            $ sudo visudo   <span class="cisco-comment"># (opcional: validar sudoers)</span>
-          </div>
-        </div>
-
-        <!-- 4) Firewall UFW -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Firewall rápido con UFW</h3>
-          <p class="text-sm text-slate-400 mb-2">Abrir solo lo necesario (SSH, HTTP, HTTPS).</p>
-          <div class="code-block text-xs">
-            $ sudo ufw default deny incoming<br>
-            $ sudo ufw default allow outgoing<br>
-            $ sudo ufw allow 22/tcp<br>
-            $ sudo ufw allow 80,443/tcp<br>
-            $ sudo ufw enable<br>
-            $ sudo ufw status verbose
-          </div>
-        </div>
-
-        <!-- 5) Nginx Reverse Proxy -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Nginx Reverse Proxy</h3>
-          <p class="text-sm text-slate-400 mb-2">Publica un servicio interno en el puerto 8080.</p>
-          <div class="code-block text-xs">
-            $ sudo apt install nginx -y<br>
-            $ sudo nano /etc/nginx/sites-available/<span class="cisco-param">miapp</span><br><br>
-            server {<br>
-            &nbsp;&nbsp;listen 80;<br>
-            &nbsp;&nbsp;server_name <span class="cisco-param">miapp.mexweb.me</span>;<br><br>
-            &nbsp;&nbsp;location / {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://127.0.0.1:8080;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Host $host;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header X-Real-IP $remote_addr;<br>
-            &nbsp;&nbsp;}<br>
-            }<br><br>
-            $ sudo ln -s /etc/nginx/sites-available/<span class="cisco-param">miapp</span> /etc/nginx/sites-enabled/<br>
-            $ sudo nginx -t && sudo systemctl reload nginx
-          </div>
-        </div>
-
-        <!-- 6) Let's Encrypt / Certbot -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Let's Encrypt con Certbot</h3>
-          <p class="text-sm text-slate-400 mb-2">HTTPS gratis para Nginx.</p>
-          <div class="code-block text-xs">
-            $ sudo apt install certbot python3-certbot-nginx -y<br>
-            $ sudo certbot --nginx -d <span class="cisco-param">miapp.mexweb.me</span><br>
-            $ sudo certbot renew --dry-run
-          </div>
-        </div>
-
-        <!-- 7) Docker básico -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Instalar Docker (script oficial)</h3>
-          <p class="text-sm text-slate-400 mb-2">Para montar contenedores rápido.</p>
-          <div class="code-block text-xs">
-            $ curl -fsSL https://get.docker.com -o get-docker.sh<br>
-            $ sudo sh get-docker.sh<br>
-            $ sudo usermod -aG docker <span class="cisco-param">$USER</span><br>
-            $ docker version
-          </div>
-        </div>
-
-        <!-- 8) Nginx en Docker -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Nginx en Docker</h3>
-          <p class="text-sm text-slate-400 mb-2">Servidor web estático en un comando.</p>
-          <div class="code-block text-xs">
-            $ docker run -d --name webtest -p 8080:80 nginx:alpine<br>
-            $ docker logs -f webtest<br>
-            $ docker stop webtest && docker rm webtest
-          </div>
-        </div>
-
-        <!-- 9) Monitoreo rápido -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Monitoreo rápido</h3>
-          <p class="text-sm text-slate-400 mb-2">CPU, RAM, disco e IO.</p>
-          <div class="code-block text-xs">
-            $ sudo apt install htop iotop nmon -y<br><br>
-            $ htop      <span class="cisco-comment"># CPU / RAM por proceso</span><br>
-            $ iotop     <span class="cisco-comment"># IO de disco en tiempo real</span><br>
-            $ nmon      <span class="cisco-comment"># Vista global del sistema</span>
-          </div>
-        </div>
-
-        <!-- 10) Backup de /etc -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Backup rápido de /etc</h3>
-          <p class="text-sm text-slate-400 mb-2">Saca copia de configuraciones críticas.</p>
-          <div class="code-block text-xs">
-            $ sudo tar -czf /root/backup-etc-$(date +%F).tar.gz /etc<br>
-            $ ls -lh /root/backup-etc-*.tar.gz
-          </div>
-        </div>
-
-        <!-- 11) Montar disco /data -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Montar disco /data</h3>
-          <p class="text-sm text-slate-400 mb-2">Agregar un segundo disco para datos.</p>
-          <div class="code-block text-xs">
-            $ lsblk<br>
-            $ sudo mkfs.ext4 /dev/<span class="cisco-param">sdb</span><br>
-            $ sudo mkdir -p /data<br>
-            $ echo "/dev/<span class="cisco-param">sdb</span> /data ext4 defaults 0 2" | sudo tee -a /etc/fstab<br>
-            $ sudo mount -a && df -h /data
-          </div>
-        </div>
-
-        <!-- 12) Servicio systemd simple -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Crear servicio systemd</h3>
-          <p class="text-sm text-slate-400 mb-2">Levantar un script en cada arranque.</p>
-          <div class="code-block text-xs">
-            $ sudo nano /etc/systemd/system/<span class="cisco-param">mi-script.service</span><br><br>
-            [Unit]<br>
-            Description=Script MexWeb<br><br>
-            [Service]<br>
-            ExecStart=/usr/local/bin/<span class="cisco-param">mi-script.sh</span><br>
-            Restart=always<br><br>
-            [Install]<br>
-            WantedBy=multi-user.target<br><br>
-            $ sudo systemctl daemon-reload<br>
-            $ sudo systemctl enable --now <span class="cisco-param">mi-script.service</span><br>
-            $ systemctl status <span class="cisco-param">mi-script.service</span>
-          </div>
-        </div>
-
-        <!-- 13) Logs centrales -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Logs más usados</h3>
-          <p class="text-sm text-slate-400 mb-2">Rutas típicas para debug en Linux.</p>
-          <div class="code-block text-xs">
-            $ sudo tail -f /var/log/syslog<br>
-            $ sudo tail -f /var/log/auth.log<br>
-            $ sudo journalctl -u <span class="cisco-param">nginx</span> -f<br>
-            $ sudo journalctl -xe
-          </div>
-        </div>
-
-        <!-- 14) SSH endurecido -->
-        <div class="glass-card p-4 rounded-xl">
-          <h3 class="font-bold text-sky-300 mb-2">Endurecer SSH</h3>
-          <p class="text-sm text-slate-400 mb-2">Cambiar puerto y desactivar root login.</p>
-          <div class="code-block text-xs">
-            $ sudo nano /etc/ssh/sshd_config<br><br>
-            Port <span class="cisco-param">2222</span><br>
-            PermitRootLogin no<br>
-            PasswordAuthentication no<br><br>
-            $ sudo systemctl restart sshd<br>
-            $ sudo ufw allow 2222/tcp
-          </div>
-        </div>
-
+        <div class="glass-card p-4 rounded-xl"><h3 class="font-bold text-sky-300">Cloudflare Tunnel</h3><div class="code-block text-xs">$ cloudflared tunnel run nas</div></div>
       </div>
     </section>
 
-    <!-- MikroTik / RouterOS -->
     <section id="mikrotik" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400">📡 MikroTik / RouterOS</h2>
       <div class="space-y-4">
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">1) Sistema básico</summary>
-          <div class="code-block text-xs">
-            /system identity set name=MEXWEB-RB<br>
-            /ip dns set servers=1.1.1.1,8.8.8.8 allow-remote-requests=yes<br>
-            /system clock set time-zone-name=America/Mexico_City
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">2) Usuarios y seguridad</summary>
-          <div class="code-block text-xs">
-            /user add name=admin2 group=full password=StrongPass!<br>
-            /user ssh-keys import user=admin2 public-key-file=id_rsa.pub<br>
-            /ip service set telnet disabled=yes<br>
-            /ip service set ftp disabled=yes
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">3) Firewall básico</summary>
-          <div class="code-block text-xs">
-            /ip firewall filter add chain=input action=accept connection-state=established,related<br>
-            /ip firewall filter add chain=input action=drop connection-state=invalid<br>
-            /ip firewall filter add chain=input action=accept protocol=tcp dst-port=22,80,443<br>
-            /ip firewall filter add chain=input action=drop in-interface=WAN
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">4) NAT masquerade</summary>
-          <div class="code-block text-xs">
-            /ip firewall nat add chain=srcnat action=masquerade out-interface=WAN
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">5) DHCP server</summary>
-          <div class="code-block text-xs">
-            /ip pool add name=LAN ranges=192.168.88.100-192.168.88.200<br>
-            /ip dhcp-server add name=dhcp1 interface=LAN address-pool=LAN<br>
-            /ip dhcp-server network add address=192.168.88.0/24 gateway=192.168.88.1 dns-server=1.1.1.1
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">6) Bridges y VLANs</summary>
-          <div class="code-block text-xs">
-            /interface bridge add name=bridge1 vlan-filtering=yes<br>
-            /interface bridge port add bridge=bridge1 interface=ether2 pvid=10<br>
-            /interface bridge vlan add bridge=bridge1 vlan-ids=10 tagged=bridge1 untagged=ether2
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">7) Rutas estáticas</summary>
-          <div class="code-block text-xs">
-            /ip route add dst-address=10.0.0.0/8 gateway=192.0.2.1<br>
-            /ip route add dst-address=0.0.0.0/0 gateway=200.100.50.1
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">8) WireGuard rápido</summary>
-          <div class="code-block text-xs">
-            /interface wireguard add name=wg0 listen-port=51820<br>
-            /ip address add address=10.10.10.1/24 interface=wg0<br>
-            /interface wireguard peers add interface=wg0 public-key="PUBKEY" allowed-address=10.10.10.2/32
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">9) CapsMAN / WiFi</summary>
-          <div class="code-block text-xs">
-            /caps-man manager set enabled=yes<br>
-            /caps-man channel add name=ch1 frequency=5180<br>
-            /caps-man configuration add name=cfg1 ssid=MEXWEB security.authentication-types=wpa2-psk security.passphrase=ClaveWiFi
-          </div>
-        </details>
-        <details class="glass-card p-4 rounded-xl">
-          <summary class="font-bold text-sky-300">10) Monitoreo</summary>
-          <div class="code-block text-xs">
-            /tool graphing interface add interface=ether1<br>
-            /tool bandwidth-server set enabled=yes<br>
-            /interface monitor-traffic ether1 once
-          </div>
-        </details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">1) Sistema básico</summary><div class="code-block text-xs">/system identity set name=MEXWEB</div></details>
       </div>
     </section>
 
-    <!-- IoT / ESP32 -->
     <section id="iot" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400">🔧 IoT / ESP32</h2>
       <div class="space-y-4">
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">1) Parpadeo LED (Arduino)</summary><div class="code-block text-xs">pinMode(2, OUTPUT);<br>digitalWrite(2, HIGH); delay(500);<br>digitalWrite(2, LOW); delay(500);</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">2) WiFi connect (ESP32)</summary><div class="code-block text-xs">WiFi.begin("SSID","PASS");<br>while(WiFi.status()!=WL_CONNECTED){delay(500);}</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">3) HTTP GET</summary><div class="code-block text-xs">HTTPClient http;<br>http.begin("https://api.mexweb.me/ping");<br>int c=http.GET();</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">4) MQTT publish</summary><div class="code-block text-xs">// PubSubClient<br>client.publish("lab/esp","hola");</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">5) Sensor DHT11</summary><div class="code-block text-xs">float t = dht.readTemperature();<br>float h = dht.readHumidity();</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">6) Deep Sleep</summary><div class="code-block text-xs">esp_sleep_enable_timer_wakeup(10e6);<br>esp_deep_sleep_start();</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">7) OTA Update</summary><div class="code-block text-xs">ArduinoOTA.begin();<br>ArduinoOTA.handle();</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">8) PWM LED</summary><div class="code-block text-xs">ledcAttachPin(2,0);<br>ledcSetup(0,5000,8);<br>ledcWrite(0,128);</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">9) I2C Scan</summary><div class="code-block text-xs">Wire.begin();<br>for(byte a=1;a<127;a++){Wire.beginTransmission(a);if(Wire.endTransmission()==0){/*found*/}}</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">10) SPIFFS read</summary><div class="code-block text-xs">if(!SPIFFS.begin(true)){}<br>File f=SPIFFS.open("/cfg.txt");</div></details>
+        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">1) WiFi connect</summary><div class="code-block text-xs">WiFi.begin("SSID","PASS");</div></details>
       </div>
     </section>
 
-    <!-- SysAdmin / Repair -->
     <section id="sysadmin" class="tab-content">
       <h2 class="text-3xl font-bold mb-6 text-sky-400">🛠️ SysAdmin / Repair</h2>
       <div class="space-y-4">
         <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">1) Checar espacio</summary><div class="code-block text-xs">$ df -h</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">2) Uso CPU/RAM</summary><div class="code-block text-xs">$ top<br>$ htop</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">3) Logs rápidos</summary><div class="code-block text-xs">$ journalctl -xe<br>$ tail -f /var/log/syslog</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">4) Red básica</summary><div class="code-block text-xs">$ ip a<br>$ ip r<br>$ ping 8.8.8.8</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">5) Puertos</summary><div class="code-block text-xs">$ ss -tulnp<br>$ netstat -plnt</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">6) Servicios</summary><div class="code-block text-xs">$ systemctl status nginx<br>$ systemctl restart nginx</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">7) Backup rápido</summary><div class="code-block text-xs">$ tar -czf backup.tar.gz /etc</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">8) Disco/SMART</summary><div class="code-block text-xs">$ lsblk<br>$ smartctl -a /dev/sda</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">9) Users/SSH</summary><div class="code-block text-xs">$ sudo adduser admin<br>$ sudo usermod -aG sudo admin<br>$ sudo ufw allow 22/tcp</div></details>
-        <details class="glass-card p-4 rounded-xl"><summary class="font-bold text-sky-300">10) Actualizar todo</summary><div class="code-block text-xs">$ sudo apt update && sudo apt upgrade -y</div></details>
       </div>
     </section>
 
-    <!-- Zona de Descargas -->
     <section id="downloads" class="tab-content">
-      <h2 class="text-3xl font-bold mb-3 text-sky-400 flex items-center gap-2">
-        <span>⬇️</span> Zona de Descargas
-      </h2>
-      <p class="text-slate-400 mb-6">
-        Herramientas que siempre uso en redes, soporte y laboratorios. Descarga desde las fuentes oficiales o desde mis espejos.
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <!-- WinBox -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>🧰</span> WinBox
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Herramienta oficial de MikroTik para administrar routers.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Plataforma: Windows</span>
-            <span class="text-sky-400 font-mono text-[11px]">~2 MB</span>
-          </div>
-          <a
-            href="https://download.mikrotik.com/winbox/WinBox64.exe"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar WinBox
-          </a>
-        </article>
-
-        <!-- PuTTY -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>🖥️</span> PuTTY
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Cliente SSH/Telnet ligero para acceder a equipos de red y servidores.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Plataforma: Windows</span>
-            <span class="text-sky-400 font-mono text-[11px]">~3 MB</span>
-          </div>
-          <a
-            href="https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar PuTTY
-          </a>
-        </article>
-
-        <!-- Rufus -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>💿</span> Rufus
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Crear USB booteables para instalar Windows, Linux y más.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Plataforma: Windows</span>
-            <span class="text-sky-400 font-mono text-[11px]">Portable</span>
-          </div>
-          <a
-            href="https://github.com/pbatard/rufus/releases/latest/download/rufus-x86_64.exe"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar Rufus
-          </a>
-        </article>
-
-        <!-- Angry IP Scanner -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>🌐</span> Angry IP Scanner
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Escáner de IPs rápido para encontrar hosts en tu red.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Windows / macOS / Linux</span>
-            <span class="text-sky-400 font-mono text-[11px]">Java</span>
-          </div>
-          <a
-            href="https://github.com/angryip/ipscan/releases/latest"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar Angry IP
-          </a>
-        </article>
-
-        <!-- Wireshark -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>📡</span> Wireshark
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Analizador de tráfico de red para capturar y estudiar paquetes.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Win / macOS / Linux</span>
-            <span class="text-sky-400 font-mono text-[11px]">x64</span>
-          </div>
-          <a
-            href="https://www.wireshark.org/download.html"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar Wireshark
-          </a>
-        </article>
-
-        <!-- VirtualBox -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>📦</span> VirtualBox
-            </h3>
-            <p class="text-sm text-slate-400 mt-1">Virtualización para tus laboratorios de Linux y Windows.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Win / macOS / Linux</span>
-            <span class="text-sky-400 font-mono text-[11px]">Múltiples SO</span>
-          </div>
-          <a
-            href="https://www.virtualbox.org/wiki/Downloads"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar VirtualBox
-          </a>
-        </article>
-
-        <!-- BalenaEtcher -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>🧪</span> BalenaEtcher
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Graba imágenes .ISO y .IMG a USB o SD de forma sencilla.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Win / macOS / Linux</span>
-            <span class="text-sky-400 font-mono text-[11px]">GUI</span>
-          </div>
-          <a
-            href="https://etcher.balena.io/"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar Etcher
-          </a>
-        </article>
-
-        <!-- Notepad++ -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>📝</span> Notepad++
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">Editor de texto ligero ideal para configs y scripts rápidos.</p>
-          </header>
-          <div class="flex items-center justify-between mt-3 text-xs text-slate-400">
-            <span>Plataforma: Windows</span>
-            <span class="text-sky-400 font-mono text-[11px]">x86 / x64</span>
-          </div>
-          <a
-            href="https://github.com/notepad-plus-plus/notepad-plus-plus/releases/latest"
-            target="_blank"
-            class="mt-4 inline-flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105"
-          >
-            Descargar Notepad++
-          </a>
-        </article>
-
-        <!-- Slot genérico -->
-        <article class="glass-card rounded-xl p-4 flex flex-col justify-between">
-          <header class="mb-3">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-              <span>➕</span> Más herramientas muy pronto
-            </h3>
-            <p class="text-xs text-slate-400 mt-1">
-              Aquí irán otras apps que uso diario: AnyDesk, VS Code, herramientas de diagnóstico, etc.
-            </p>
-          </header>
-          <div class="mt-4 text-xs text-slate-500">
-            Si quieres que suba alguna herramienta en específico, mándame DM en TikTok <span class="text-sky-400 font-mono">@mexwebmx</span>.
-          </div>
-        </article>
+      <h2 class="text-3xl font-bold mb-3 text-sky-400">⬇️ Zona de Descargas</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <article class="glass-card rounded-xl p-4"><h3 class="text-xl font-bold text-white">🧰 WinBox</h3><a href="#" class="mt-4 inline-block bg-sky-600 px-4 py-2 rounded">Descargar</a></article>
       </div>
     </section>
-
   </main>
 
   <div class="radio-player" id="radioPlayer">
     <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <button id="mainPlayBtn" class="bg-sky-500 hover:bg-sky-400 text-white rounded-full w-12 h-12 flex items-center justify-center transition-transform hover:scale-110 shadow-lg shadow-sky-500/30">
+      <div class="flex items-center gap-4 w-2/3">
+        <button id="mainPlayBtn" class="bg-sky-500 hover:bg-sky-400 text-white rounded-full w-12 h-12 flex items-center justify-center transition-transform hover:scale-110 shadow-lg shrink-0">
           <span id="iconPlay">▶</span>
           <span id="iconPause" class="hidden">⏸</span>
         </button>
-        <div>
+        
+        <div class="overflow-hidden w-full pr-4">
           <div class="flex items-center gap-2">
-            <h3 class="font-bold text-white text-lg">MexWeb Radio</h3>
-            <div id="visualizer" class="equalizer opacity-0 transition-opacity">
+            <h3 id="live-song-title" class="font-bold text-white text-base md:text-lg truncate">MexWeb Radio</h3>
+            <div id="visualizer" class="equalizer opacity-0 transition-opacity shrink-0">
               <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
             </div>
           </div>
-          <p id="playerStatus" class="text-xs text-sky-300">Cargando...</p>
+          <div class="flex items-center gap-2 mt-0.5">
+            <p id="live-song-artist" class="text-xs text-slate-400 font-medium truncate">Transmisión inactiva</p>
+            <p id="playerStatus" class="text-xs text-sky-300 shrink-0 hidden md:block">| Cargando...</p>
+          </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0">
         <button id="muteBtn" class="text-slate-300 hover:text-white">🔊</button>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" class="w-24 accent-sky-500 cursor-pointer">
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" class="w-20 md:w-24 accent-sky-500 cursor-pointer">
       </div>
     </div>
   </div>
 
   <audio id="audioStream" crossorigin="anonymous" preload="none"></audio>
-
   <script async src="https://www.tiktok.com/embed.js"></script>
+
   <script>
-    // Tabs
+    // --- NAVEGACIÓN PESTAÑAS ---
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -916,8 +293,8 @@
       if(btn) btn.classList.add('active');
     }
 
-    // Radio
     document.addEventListener('DOMContentLoaded', () => {
+      // --- LÓGICA RADIO AZURACAST ---
       const audio = document.getElementById('audioStream');
       const mainPlayBtn = document.getElementById('mainPlayBtn');
       const iconPlay = document.getElementById('iconPlay');
@@ -928,66 +305,71 @@
       const muteBtn = document.getElementById('muteBtn');
       const unmuteTopBtn = document.getElementById('unmuteTopBtn');
       const autoStatus = document.getElementById('autoStatus');
+      
+      // Elementos Metadatos
+      const titleEl = document.getElementById('live-song-title');
+      const artistEl = document.getElementById('live-song-artist');
+
       const STREAM_URL = "https://radio.mexweb.me/listen/mexweb_radio/radio.mp3"; 
+      const API_URL = "https://radio.mexweb.me/api/nowplaying/mexweb_radio";
       let isPlaying = false;
 
-      function setSource() { audio.src = STREAM_URL + "?" + Date.now(); }
+      function setSource() { audio.src = STREAM_URL + "?nocache=" + Date.now(); }
 
       function updateUI(playing) {
         if (playing) {
-          iconPlay.classList.add('hidden');
-          iconPause.classList.remove('hidden');
+          iconPlay.classList.add('hidden'); iconPause.classList.remove('hidden');
           visualizer.classList.remove('opacity-0');
-          playerStatus.innerHTML = "Transmitiendo • <span class='" + (audio.muted ? "text-yellow-400" : "text-green-400") + "'>" + (audio.muted ? "(Silenciado)" : "Sonando") + "</span>";
+          playerStatus.innerHTML = "<span class='" + (audio.muted ? "text-yellow-400" : "text-green-400") + "'>" + (audio.muted ? "(Silenciado)" : "En Vivo") + "</span>";
         } else {
-          iconPlay.classList.remove('hidden');
-          iconPause.classList.add('hidden');
+          iconPlay.classList.remove('hidden'); iconPause.classList.add('hidden');
           visualizer.classList.add('opacity-0');
           playerStatus.textContent = "Pausado";
         }
       }
 
+      // Consulta a AzuraCast API
+      function fetchMetadata() {
+        fetch(API_URL)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data.now_playing && data.now_playing.song) {
+              titleEl.innerText = data.now_playing.song.title || "MexWeb Radio";
+              artistEl.innerText = data.now_playing.song.artist || "En Vivo";
+            }
+          }).catch(e => console.log("Error API Radio", e));
+      }
+      setInterval(fetchMetadata, 10000); 
+
       function tryAutoplay() {
         setSource();
-        audio.muted = true;
-        audio.volume = 0.5;
+        audio.muted = true; audio.volume = 0.5;
         const p = audio.play();
         if (p) {
           p.then(() => {
-            isPlaying = true;
-            updateUI(true);
+            isPlaying = true; updateUI(true); fetchMetadata();
             autoStatus.textContent = "Reproduciendo en silencio";
             unmuteTopBtn.classList.remove('hidden');
           }).catch(() => {
-            playerStatus.textContent = "Haz clic en Play para iniciar";
-            autoStatus.textContent = "Haz clic en Play para iniciar";
-            isPlaying = false;
-            updateUI(false);
+            playerStatus.textContent = "Click en Play"; autoStatus.textContent = "Pausado";
+            isPlaying = false; updateUI(false);
           });
         }
       }
 
       mainPlayBtn.addEventListener('click', () => {
         if (isPlaying) {
-          audio.pause();
-          audio.src = "";
-          isPlaying = false;
+          audio.pause(); audio.src = ""; isPlaying = false;
         } else {
-          setSource();
-          audio.muted = false;
-          audio.play();
-          isPlaying = true;
-          unmuteTopBtn.classList.add('hidden');
+          setSource(); audio.muted = false; audio.play(); isPlaying = true;
+          unmuteTopBtn.classList.add('hidden'); fetchMetadata();
         }
         updateUI(isPlaying);
       });
 
       volumeSlider.addEventListener('input', (e) => {
         audio.volume = e.target.value;
-        if(audio.volume > 0 && audio.muted) {
-          audio.muted = false;
-          updateUI(true);
-        }
+        if(audio.volume > 0 && audio.muted) { audio.muted = false; updateUI(true); }
       });
 
       muteBtn.addEventListener('click', () => {
@@ -997,19 +379,45 @@
       });
 
       unmuteTopBtn.addEventListener('click', () => {
-        if (!isPlaying) {
-          setSource();
-          audio.play();
-          isPlaying = true;
-        }
-        audio.muted = false;
-        audio.volume = 1.0;
-        volumeSlider.value = 1.0;
-        updateUI(true);
-        unmuteTopBtn.classList.add('hidden');
+        if (!isPlaying) { setSource(); audio.play(); isPlaying = true; fetchMetadata(); }
+        audio.muted = false; audio.volume = 1.0; volumeSlider.value = 1.0;
+        updateUI(true); unmuteTopBtn.classList.add('hidden');
       });
 
       tryAutoplay();
+
+      // --- LÓGICA DE GEOLOCALIZACIÓN Y CLIMA ---
+      function initVisitorData() {
+        const cityEl = document.getElementById('visitor-city');
+        const tempEl = document.getElementById('visitor-weather');
+        const timeEl = document.getElementById('visitor-time');
+
+        fetch('https://ipapi.co/json/')
+          .then(res => res.json())
+          .then(geo => {
+            if(geo.city) cityEl.innerText = geo.city;
+            
+            // Reloj Local
+            setInterval(() => {
+              timeEl.innerText = new Date().toLocaleTimeString('es-MX', { timeZone: geo.timezone, hour: '2-digit', minute:'2-digit' });
+            }, 1000);
+
+            // Clima OpenMeteo
+            return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`);
+          })
+          .then(res => res.json())
+          .then(weather => {
+            if(weather && weather.current_weather) {
+              tempEl.innerText = weather.current_weather.temperature + "°C";
+            }
+          })
+          .catch(err => {
+             // Fallback Silencioso
+             cityEl.innerText = "Visitante";
+             setInterval(() => { timeEl.innerText = new Date().toLocaleTimeString('es-MX', {hour: '2-digit', minute:'2-digit'}); }, 1000);
+          });
+      }
+      initVisitorData();
     });
   </script>
 </body>
