@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MexWeb | Portal de Descargas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes gradient-xy { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .bg-dynamic { background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #0c4a6e); background-size: 400% 400%; animation: gradient-xy 15s ease infinite; }
+        .glass-card { background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1rem; transition: transform 0.2s, border-color 0.2s; }
+        .glass-card:hover { transform: translateY(-4px); border-color: rgba(56, 189, 248, 0.4); }
+        .badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; tracking-wider: 0.05em; }
+    </style>
+</head>
+<body class="bg-dynamic min-h-screen p-4 md:p-6 text-slate-200 font-sans">
+
+    <!-- HEADER BAR -->
+    <header class="w-full max-w-7xl mb-6 glass-card p-4 flex justify-between items-center border border-white/5">
+        <h1 class="text-2xl font-black text-white bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">MEXWEB REPOSITORY</h1>
+        <div class="relative w-48 sm:w-64">
+            <input type="text" placeholder="Buscar aportes..." class="w-full bg-slate-900/60 border border-slate-800 rounded-lg py-1.5 px-3 text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+        </div>
+    </header>
+
+    <!-- NAVIGATION MENU -->
+    <nav class="w-full max-w-7xl mb-6 flex gap-4 text-sm font-bold uppercase tracking-wider">
+        <a href="index.html" class="text-slate-400 hover:text-sky-400 transition-colors pb-2 px-1">Radio Hub</a>
+        <a href="multimedia.html" class="text-slate-400 hover:text-sky-400 transition-colors pb-2 px-1">Cine / Películas</a>
+        <a href="descargas.html" class="text-sky-400 border-b-2 border-sky-400 pb-2 px-1">Portal Descargas</a>
+    </nav>
+
+    <!-- DOWNLOADS INDEX GRID -->
+    <main class="max-w-7xl mx-auto w-full py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Post 1 -->
+        <article class="glass-card overflow-hidden flex flex-col cursor-pointer">
+            <div class="relative h-40 bg-slate-900">
+                <img src="https://images.unsplash.com/photo-1629654291663-b91ad427698f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-50">
+                <span class="badge bg-sky-500/80 text-slate-950">Redes</span>
+            </div>
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="text-sm font-bold text-white mb-2 line-clamp-2">Cisco Packet Tracer v8.2 Suite Final [Full]</h3>
+                <p class="text-xs text-slate-400 line-clamp-2 mb-4">Herramienta oficial de simulación para laboratorios avanzados de routing y switching CCNA.</p>
+                <div class="mt-auto flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-white/5 pt-3">
+                    <span>📦 250 MB</span>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Post 2 -->
+        <article class="glass-card overflow-hidden flex flex-col cursor-pointer">
+            <div class="relative h-40 bg-slate-900">
+                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-50">
+                <span class="badge bg-emerald-500/80 text-slate-950">Sistemas</span>
+            </div>
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="text-sm font-bold text-white mb-2 line-clamp-2">Debian 12 Bookworm Netinst Core ISO</h3>
+                <p class="text-xs text-slate-400 line-clamp-2 mb-4">Instalador mínimo oficial de Debian Linux optimizado para despliegue ágil de servidores limpios.</p>
+                <div class="mt-auto flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-white/5 pt-3">
+                    <span>📦 600 MB</span>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Post 3 -->
+        <article class="glass-card overflow-hidden flex flex-col cursor-pointer">
+            <div class="relative h-40 bg-slate-900">
+                <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-50">
+                <span class="badge bg-purple-500/80 text-white">Manuales</span>
+            </div>
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="text-sm font-bold text-white mb-2 line-clamp-2">Manual Ingeniería de Configuración MikroTik</h3>
+                <p class="text-xs text-slate-400 line-clamp-2 mb-4">Compendio completo MTCNA teórico-práctico para ingenieros y administradores de red MikroTik RouterOS.</p>
+                <div class="mt-auto flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-white/5 pt-3">
+                    <span>📦 15 MB</span>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Post 4 -->
+        <article class="glass-card overflow-hidden flex flex-col cursor-pointer">
+            <div class="relative h-40 bg-slate-900">
+                <img src="https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-50">
+                <span class="badge bg-amber-500/80 text-slate-950">Utilidades</span>
+            </div>
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="text-sm font-bold text-white mb-2 line-clamp-2">WinBox v3.40 Architecture [x64 Portable]</h3>
+                <p class="text-xs text-slate-400 line-clamp-2 mb-4">Cliente WinBox oficial y ultra-ligero para la administración y configuración gráfica de routers.</p>
+                <div class="mt-auto flex justify-between items-center text-[10px] font-mono text-slate-500 border-t border-white/5 pt-3">
+                    <span>📦 2 MB</span>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </article>
+    </main>
+</body>
+</html>
