@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MexWeb Tech | Blog Educativo ICC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700;900&display=swap" rel="stylesheet">
+  <!-- FontAwesome para los logos (Teams, WhatsApp, Facebook, etc.) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <style>
+    :root {
+      --dark-bg: #030305;
+    }
+    
+    body {
+      background-color: var(--dark-bg);
+      background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: #e2e8f0;
+      font-family: "Rajdhani", sans-serif;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* Tarjetas de Cristal */
+    .glass-card {
+      background: rgba(20, 20, 35, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body class="text-slate-300">
+
+  <header class="max-w-7xl mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+      <div>
+        <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter">
+          MEXWEB<span class="text-sky-500">.ME</span> <span class="text-2xl text-slate-500">| EDU_BLOG</span>
+        </h1>
+        <div class="text-xs text-sky-600 tracking-[0.2em] uppercase mt-1">>> Autor: Saúl Mercado Alvarado | Estudiante ICC</div>
+      </div>
+      <div class="hidden md:flex gap-4 text-xs font-bold">
+        <div class="bg-slate-900 px-3 py-1 rounded border border-slate-700">
+          <span class="text-green-500">●</span> Ing. Sistemas
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 mt-2">
+    
+    <section class="mb-8">
+      <div class="glass-card p-6 rounded-xl border-l-4 border-sky-500">
+        <h2 class="text-2xl font-bold text-white mb-2">Módulo: Herramientas de Comunicación y Socialización</h2>
+        <p class="text-slate-400 text-sm md:text-base">Este blog educativo está diseñado para definir y ejemplificar el uso de herramientas digitales esenciales en el entorno de aprendizaje a distancia del Instituto Consorcio Clavijero (ICC).</p>
+      </div>
+    </section>
+
+    <!-- Herramientas de Comunicación -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-sky-400 mb-6 border-b border-slate-800 pb-2 flex items-center gap-2">
+        <span>📡</span> Herramientas de Comunicación
+      </h2>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        
+        <!-- Correo Electrónico -->
+        <div class="glass-card p-5 rounded-lg flex flex-col">
+          <h3 class="font-bold text-white mb-2 text-xl flex items-center gap-2">
+            <i class="fa-solid fa-envelope text-sky-500"></i> Correo Electrónico
+          </h3>
+          <p class="text-sm text-slate-400 mb-2">
+            Medio de comunicación asíncrono que permite a los usuarios enviar y recibir mensajes de manera muy rápida mediante un ordenador conectado a la red.
+          </p>
+          
+          <!-- Etiquetas de plataformas -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-google text-red-400 mr-1"></i> Gmail</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-microsoft text-blue-400 mr-1"></i> Outlook</span>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded border-l-2 border-sky-500 mt-auto">
+            <h4 class="font-bold text-sky-400 text-sm mb-1">Ejemplo de uso en el ICC:</h4>
+            <p class="text-slate-300 text-sm">Utilizaré la cuenta institucional para el envío de justificantes, recepción de comunicados oficiales y consultas formales a los facilitadores de la ingeniería.</p>
+          </div>
+        </div>
+
+        <!-- Mensajería Instantánea -->
+        <div class="glass-card p-5 rounded-lg flex flex-col">
+          <h3 class="font-bold text-white mb-2 text-xl flex items-center gap-2">
+            <i class="fa-solid fa-comment-dots text-sky-500"></i> Mensajería Instantánea
+          </h3>
+          <p class="text-sm text-slate-400 mb-2">
+            Facilita la comunicación síncrona en tiempo real, permitiendo el envío de mensajes de texto y archivos entre usuarios que se han aceptado previamente.
+          </p>
+          
+          <!-- Etiquetas de plataformas -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> WhatsApp</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-telegram text-sky-400 mr-1"></i> Telegram</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-discord text-indigo-400 mr-1"></i> Discord</span>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded border-l-2 border-sky-500 mt-auto">
+            <h4 class="font-bold text-sky-400 text-sm mb-1">Ejemplo de uso en el ICC:</h4>
+            <p class="text-slate-300 text-sm">Sincronización rápida con compañeros de equipo para debatir temas, distribuir tareas y resolver bloqueos operativos urgentes al realizar actividades.</p>
+          </div>
+        </div>
+
+        <!-- Videollamadas -->
+        <div class="glass-card p-5 rounded-lg flex flex-col">
+          <h3 class="font-bold text-white mb-2 text-xl flex items-center gap-2">
+            <i class="fa-solid fa-video text-sky-500"></i> Videollamadas
+          </h3>
+          <p class="text-sm text-slate-400 mb-2">
+            Evolución del chat que permite la transmisión síncrona de voz y vídeo en tiempo real utilizando periféricos como micrófono y cámara web.
+          </p>
+          
+          <!-- Etiquetas de plataformas -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-solid fa-video text-green-400 mr-1"></i> Google Meet</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-solid fa-users text-indigo-400 mr-1"></i> MS Teams</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-solid fa-camera text-blue-500 mr-1"></i> Zoom</span>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded border-l-2 border-sky-500 mt-auto">
+            <h4 class="font-bold text-sky-400 text-sm mb-1">Ejemplo de uso en el ICC:</h4>
+            <p class="text-slate-300 text-sm">Asistencia a sesiones en vivo con facilitadores para resolución de dudas complejas y reuniones virtuales de equipo para trabajar colaborativamente.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Herramientas de Socialización -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-pink-400 mb-6 border-b border-slate-800 pb-2 flex items-center gap-2">
+        <span>🌐</span> Herramientas de Socialización
+      </h2>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        
+        <!-- Redes Sociales -->
+        <div class="glass-card p-5 rounded-lg flex flex-col">
+          <h3 class="font-bold text-white mb-2 text-xl flex items-center gap-2">
+            <i class="fa-solid fa-hashtag text-pink-500"></i> Redes Sociales
+          </h3>
+          <p class="text-sm text-slate-400 mb-2">
+            Espacios de relación en Internet entre comunidades de usuarios que comparten intereses, con la finalidad de poner en común conocimientos.
+          </p>
+          
+          <!-- Etiquetas de plataformas -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-linkedin text-blue-500 mr-1"></i> LinkedIn</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-facebook text-blue-600 mr-1"></i> Facebook</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-x-twitter text-slate-300 mr-1"></i> X</span>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded border-l-2 border-pink-500 mt-auto">
+            <h4 class="font-bold text-pink-400 text-sm mb-1">Ejemplo de uso en el ICC:</h4>
+            <p class="text-slate-300 text-sm">Integración en grupos de estudiantes de TI, seguimiento de eventos tecnológicos y networking profesional con futuros colegas.</p>
+          </div>
+        </div>
+
+        <!-- Blogs -->
+        <div class="glass-card p-5 rounded-lg border border-pink-500/30 flex flex-col">
+          <h3 class="font-bold text-pink-400 mb-2 text-xl flex items-center gap-2">
+            <i class="fa-solid fa-blog"></i> Blogs Educativos
+          </h3>
+          <p class="text-sm text-slate-400 mb-2">
+            Sitios web propios donde se publican artículos en orden cronológico. En educación, actúan como portafolios y diarios de trabajo.
+          </p>
+          
+          <!-- Etiquetas de plataformas -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-wordpress text-sky-500 mr-1"></i> WordPress</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-blogger text-orange-500 mr-1"></i> Blogger</span>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded border-l-2 border-pink-500 mt-auto">
+            <h4 class="font-bold text-pink-400 text-sm mb-1">Ejemplo de uso en el ICC:</h4>
+            <p class="text-slate-300 text-sm">Mantenimiento de esta misma bitácora digital para documentar tareas, prácticas de la ingeniería y reflexiones académicas.</p>
+          </div>
+        </div>
+
+        <!-- Páginas Personales -->
+        <div class="glass-card p-5 rounded-lg flex flex-col">
+          <h3 class="font-bold text-white mb-2 text-xl flex items-center gap-2">
+            <i class="fa-solid fa-laptop-code text-pink-500"></i> Páginas Personales
+          </h3>
+          <p class="text-sm text-slate-400 mb-2">
+            Espacios web individuales diseñados para la gestión de archivos, portafolios y exposición de ideas hacia una audiencia amplia.
+          </p>
+          
+          <!-- Etiquetas de plataformas -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-brands fa-github text-white mr-1"></i> GitHub Pages</span>
+            <span class="bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700 text-slate-300"><i class="fa-solid fa-server text-green-400 mr-1"></i> Host Propio</span>
+          </div>
+
+          <div class="bg-slate-900/50 p-4 rounded border-l-2 border-pink-500 mt-auto">
+            <h4 class="font-bold text-pink-400 text-sm mb-1">Ejemplo de uso en el ICC:</h4>
+            <p class="text-slate-300 text-sm">Uso de la infraestructura en <em>mexweb.me</em> como currículum y portafolio técnico para respaldar las competencias adquiridas en el ICC.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Referencias APA -->
+    <section>
+      <div class="glass-card p-6 rounded-xl bg-black/40">
+        <h3 class="font-bold text-yellow-400 mb-4 flex items-center gap-2">
+          <span>📚</span> Referencias Bibliográficas (Formato APA)
+        </h3>
+        <div class="space-y-3 text-sm text-slate-400 pl-6" style="text-indent: -1.5rem;">
+          <p>Martín Fernández, C. (2018). <em>Guía sobre el uso educativo de los blogs</em>. Gabinete de Tele-Educación (GATE), Universidad Politécnica de Madrid.</p>
+          <p>Musach Pi, R. (s.f.). <em>Comunicación y navegación</em>. Universitat Oberta de Catalunya (UOC).</p>
+          <p>Rojas Gutierrez, K. Y. (s.f.). <em>Internet su evolución y sus desafíos</em>. Fundamentos de Ingeniería Administrativa.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
