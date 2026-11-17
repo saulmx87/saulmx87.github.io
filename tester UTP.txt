@@ -1,0 +1,543 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <WiFi.h>
+#include <WebServer.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// --- CONFIGURACIÓN DE RED (MODO PUNTO DE ACCESO - AP) ---
+const char* ssid = "NETWORK_TESTER";
+const char* password = "Saul.1987";
+
+// IP fija para el Punto de Acceso del ESP32
+IPAddress local_IP(192, 168, 4, 1);
+IPAddress gateway(192, 168, 4, 1);
+IPAddress subnet(255, 255, 255, 0);
+
+WebServer server(80);
+
+// --- PINES DEL TESTER ---
+String colores[8] = {"B-Naranja", "Naranja", "B-Verde", "Azul", "B-Azul", "Verde", "B-Cafe", "Cafe"};
+const int txPins[8] = {13, 14, 27, 26, 25, 33, 32, 23}; 
+const int rxPins[8] = {4, 16, 17, 18, 19, 2, 5, 12};    
+
+// --- MÁQUINA DE ESTADOS ---
+int modoActual = 2; // 0=Espera, 1=Rápido, 2=Secuencial, 3=Tono
+int pasoSecuencia = 0;
+unsigned long ultimoPaso = 0;
+unsigned long tiempoInicioTono = 0;
+
+// Variables Web y Calidad
+int webRxMap[8]; 
+int webCalidad[8]; 
+String webDiagnostico = "Iniciando...";
+String webConsejo = "Esperando datos...";
+
+// --- INTERFAZ WEB HTML/CSS ---
+const char* paginaWeb = R"rawliteral(
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tester MexWeb PRO</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #121212; color: #fff; text-align: center; margin: 0; padding: 10px; }
+    h1 { color: #00ffcc; font-size: 20px; margin-bottom: 10px;}
+    .card { background-color: #1e1e1e; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); }
+    .card-accion { background-color: #2a2a2a; border-left: 5px solid #00ffcc; border-radius: 5px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.8); }
+    
+    .grafico-cables { position: relative; display: flex; justify-content: space-around; margin-top: 15px; margin-bottom: 15px; padding: 10px 0;}
+    #lienzo-lineas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+    
+    .columna { display: flex; flex-direction: column; gap: 12px; align-items: center; z-index: 2; }
+    .btn-hilo { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; background-color: #333; transition: 0.1s;}
+    
+    .apagado { background-color: #333; color: #666; }
+    .ok { background-color: #00ff00; color: black; box-shadow: 0 0 12px #00ff00;}
+    .fail { background-color: #ff3333; color: white; box-shadow: 0 0 12px #ff3333;}
+    .cross { background-color: #ff9900; color: black; box-shadow: 0 0 12px #ff9900;}
+    
+    .btn { color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 8px; font-weight: bold;}
+    .btn-rapido { background-color: #28a745; }
+    .btn-seq { background-color: #9c27b0; }
+    .btn-tono { background-color: #007bff; }
+    .btn-stop { background-color: #dc3545; font-size: 16px; padding: 15px;}
+    .btn-extra { background-color: #555; }
+    .btn-guia { background-color: #17a2b8; }
+    .btn:hover { opacity: 0.8; }
+    
+    #alertas { color: #ff9900; font-weight: bold; margin-top: 10px; font-size: 13px; text-align: left; line-height: 1.5;}
+    #consejo { color: #fff; font-size: 15px; font-weight: bold; text-align: left; margin-top: 5px; }
+    .grid-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    /* Estilos para la Guía de Ponchado */
+    #seccion-guia { display: none; text-align: left; font-size: 13px; color: #ddd; margin-top: 15px; padding-top: 15px; border-top: 1px solid #444;}
+    .cb { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; border: 1px solid #777;}
+    .cb-bn { background: linear-gradient(90deg, #fff 50%, #ff8c00 50%); }
+    .cb-n { background: #ff8c00; }
+    .cb-bv { background: linear-gradient(90deg, #fff 50%, #00a000 50%); }
+    .cb-v { background: #00a000; }
+    .cb-ba { background: linear-gradient(90deg, #fff 50%, #0055ff 50%); }
+    .cb-a { background: #0055ff; }
+    .cb-bc { background: linear-gradient(90deg, #fff 50%, #8b4513 50%); }
+    .cb-c { background: #8b4513; }
+    .guia-tabla { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .guia-titulo { color: #00ffcc; font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid #00ffcc; padding-bottom: 3px;}
+  </style>
+  <script>
+    let nombresColores = ["B-Naranja", "Naranja", "B-Verde", "Azul", "B-Azul", "Verde", "B-Cafe", "Cafe"];
+    
+    setInterval(function() {
+      fetch('/datos').then(response => response.json()).then(data => {
+        let modoGlobal = data.modo;
+        document.getElementById('diagnostico').innerText = data.diagnostico;
+        document.getElementById('consejo').innerText = data.consejo;
+        let alertasHTML = '';
+        
+        let svg = document.getElementById('lienzo-lineas');
+        while (svg.firstChild) { svg.removeChild(svg.firstChild); } 
+        
+        if (modoGlobal == 0 || modoGlobal == 3) {
+          for(let i=0; i<8; i++) {
+            document.getElementById('tx'+i).className = 'btn-hilo apagado';
+            document.getElementById('rx'+i).className = 'btn-hilo apagado';
+          }
+          document.getElementById('alertas').innerHTML = (modoGlobal == 3) ? "🔊 Sirena activa en hilo Azul..." : "Modo de espera.";
+          return;
+        }
+
+        let rectCont = document.getElementById('contenedor-grafico').getBoundingClientRect();
+
+        if (modoGlobal == 1) { // RÁPIDO
+          for(let i=0; i<8; i++) {
+            let rxVal = data.rx_map[i];
+            let cal = data.calidad[i];
+            document.getElementById('tx'+i).className = (rxVal == -1) ? 'btn-hilo fail' : 'btn-hilo ok';
+            
+            if(rxVal === -1) { 
+              alertasHTML += `🔴 ROTO: ${nombresColores[i]} sin conexión.<br>`;
+            } else if(rxVal !== i) { 
+              alertasHTML += `🟠 CRUZADO: ${nombresColores[i]} ➔ ${nombresColores[rxVal]}.<br>`;
+            } else {
+              alertasHTML += `✅ ${nombresColores[i]}: Calidad ${cal}%<br>`;
+            }
+
+            if (rxVal !== -1 && rxVal !== -2) {
+              let btnTx = document.getElementById('tx'+i);
+              let btnRx = document.getElementById('rx'+rxVal);
+              let rectTx = btnTx.getBoundingClientRect();
+              let rectRx = btnRx.getBoundingClientRect();
+              
+              let x1 = rectTx.left - rectCont.left + (rectTx.width / 2);
+              let y1 = rectTx.top - rectCont.top + (rectTx.height / 2);
+              let x2 = rectRx.left - rectCont.left + (rectRx.width / 2);
+              let y2 = rectRx.top - rectCont.top + (rectRx.height / 2);
+              
+              let isCross = (rxVal !== i);
+              let color = isCross ? '#ff9900' : '#00ff00';
+              let width = isCross ? 3 : 2;
+              
+              let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+              line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+              line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+              line.setAttribute('stroke', color); line.setAttribute('stroke-width', width);
+              if (isCross) line.setAttribute('stroke-dasharray', '5,5');
+              
+              svg.appendChild(line);
+            }
+          }
+          
+          for(let j=0; j<8; j++) {
+            let estadoRX = 'btn-hilo fail';
+            for(let k=0; k<8; k++) {
+              if (data.rx_map[k] == j) estadoRX = (k == j) ? 'btn-hilo ok' : 'btn-hilo cross';
+            }
+            document.getElementById('rx'+j).className = estadoRX;
+          }
+        } 
+        else if (modoGlobal == 2) { // SECUENCIAL
+          let p = data.paso_actual;
+          let rxDestino = data.rx_map[p];
+          let cal = data.calidad[p];
+
+          for(let i=0; i<8; i++) {
+            document.getElementById('tx'+i).className = 'btn-hilo apagado';
+            document.getElementById('rx'+i).className = 'btn-hilo apagado';
+          }
+
+          if (rxDestino == -1) {
+            document.getElementById('tx'+p).className = 'btn-hilo fail';
+            document.getElementById('rx'+p).className = 'btn-hilo fail'; 
+            alertasHTML = `🔴 ROTO: ${nombresColores[p]} está trozado.`;
+          } else if (rxDestino != p) {
+            document.getElementById('tx'+p).className = 'btn-hilo cross';
+            document.getElementById('rx'+rxDestino).className = 'btn-hilo cross'; 
+            alertasHTML = `🟠 CRUZADO: ${nombresColores[p]} ➔ ${nombresColores[rxDestino]}.`;
+          } else {
+            document.getElementById('tx'+p).className = 'btn-hilo ok';
+            document.getElementById('rx'+p).className = 'btn-hilo ok'; 
+            alertasHTML = `✅ ${nombresColores[p]} | Calidad: ${cal}%`;
+          }
+          
+          if (rxDestino !== -1 && rxDestino !== -2) {
+             let btnTx = document.getElementById('tx'+p);
+             let btnRx = document.getElementById('rx'+rxDestino);
+             let rectTx = btnTx.getBoundingClientRect();
+             let rectRx = btnRx.getBoundingClientRect();
+             
+             let x1 = rectTx.left - rectCont.left + (rectTx.width / 2);
+             let y1 = rectTx.top - rectCont.top + (rectTx.height / 2);
+             let x2 = rectRx.left - rectCont.left + (rectRx.width / 2);
+             let y2 = rectRx.top - rectCont.top + (rectRx.height / 2);
+             
+             let isCross = (rxDestino !== p);
+             let color = isCross ? '#ff9900' : '#00ff00';
+             let width = isCross ? 4 : 3;
+             
+             let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+             line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+             line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+             line.setAttribute('stroke', color); line.setAttribute('stroke-width', width);
+             if (isCross) line.setAttribute('stroke-dasharray', '5,5');
+             
+             svg.appendChild(line);
+          }
+        }
+        document.getElementById('alertas').innerHTML = alertasHTML;
+      });
+    }, 250); 
+    
+    function mandarComando(cmd) { fetch('/cmd?accion=' + cmd); }
+    function verReporte() { window.open('/reporte'); }
+    function toggleGuia() {
+      let x = document.getElementById('seccion-guia');
+      if (x.style.display === 'none' || x.style.display === '') {
+        x.style.display = 'block';
+      } else {
+        x.style.display = 'none';
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Tester MexWeb V1.06 AP</h1>
+  
+  <div class="card">
+    <div id="diagnostico" style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">Conectando...</div>
+    
+    <div class="grafico-cables" id="contenedor-grafico">
+      <svg id="lienzo-lineas" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="columna"><div style="font-size:12px; color:#888;">TX</div><script>for(let i=0; i<8; i++) document.write(`<div id="tx${i}" class="btn-hilo apagado">${i+1}</div>`);</script></div>
+      <div class="columna"><div style="font-size:12px; color:#888;">RX</div><script>for(let i=0; i<8; i++) document.write(`<div id="rx${i}" class="btn-hilo apagado">${i+1}</div>`);</script></div>
+    </div>
+    
+    <div id="alertas"></div>
+  </div>
+
+  <div class="card-accion">
+    <div style="font-size:12px; color:#aaa; text-align:left;">Sugerencia de Acción:</div>
+    <div id="consejo">Cargando datos...</div>
+  </div>
+
+  <div class="card">
+    <div class="grid-botones">
+      <button class="btn btn-rapido" onclick="mandarComando('rapido')">Directo (Gráfico de Cruces)</button>
+      <button class="btn btn-seq" onclick="mandarComando('secuencial')">Secuencia 1-8</button>
+    </div>
+    <button class="btn btn-tono" onclick="mandarComando('tono')">Activar Sirena (Pollo)</button>
+    <button class="btn btn-stop" onclick="mandarComando('apagar_tono')">APAGAR TONO / PARO</button>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0; font-size: 15px;">Herramientas</h3>
+    <button class="btn btn-extra" onclick="verReporte()">Descargar CSV de Certificación</button>
+    <button class="btn btn-guia" onclick="toggleGuia()">📖 Ver Guía de Ponchado TIA-568</button>
+    
+    <!-- NUEVA SECCIÓN DE GUÍA DE PONCHADO -->
+    <div id="seccion-guia">
+      <div class="guia-tabla">
+        <div>
+          <div class="guia-titulo">T568B (Más Común)</div>
+          <div><span class="cb cb-bn"></span>1. B-Naranja</div>
+          <div><span class="cb cb-n"></span>2. Naranja</div>
+          <div><span class="cb cb-bv"></span>3. B-Verde</div>
+          <div><span class="cb cb-a"></span>4. Azul</div>
+          <div><span class="cb cb-ba"></span>5. B-Azul</div>
+          <div><span class="cb cb-v"></span>6. Verde</div>
+          <div><span class="cb cb-bc"></span>7. B-Café</div>
+          <div><span class="cb cb-c"></span>8. Café</div>
+        </div>
+        <div>
+          <div class="guia-titulo">T568A</div>
+          <div><span class="cb cb-bv"></span>1. B-Verde</div>
+          <div><span class="cb cb-v"></span>2. Verde</div>
+          <div><span class="cb cb-bn"></span>3. B-Naranja</div>
+          <div><span class="cb cb-a"></span>4. Azul</div>
+          <div><span class="cb cb-ba"></span>5. B-Azul</div>
+          <div><span class="cb cb-n"></span>6. Naranja</div>
+          <div><span class="cb cb-bc"></span>7. B-Café</div>
+          <div><span class="cb cb-c"></span>8. Café</div>
+        </div>
+      </div>
+      <div class="guia-titulo" style="margin-top:5px;">Tipos de Conexión (Ponchado)</div>
+      <div style="margin-bottom: 8px;">
+        <strong style="color: #00ff00;">Cable Directo (Straight-through):</strong><br>
+        • <b>Uso:</b> Para conectar equipos diferentes (Ej. PC a Switch, Router a Modem, AP a Switch).<br>
+        • <b>Armado:</b> Usa la misma norma en ambos extremos (Casi siempre <b style="color:#00ffcc;">T568B</b> a <b style="color:#00ffcc;">T568B</b>).
+      </div>
+      <div>
+        <strong style="color: #00ccff;">Cable Cruzado (Crossover):</strong><br>
+        • <b>Uso:</b> Para conectar equipos iguales directamente sin un switch intermedio (Ej. PC a PC, Switch a Switch viejo).<br>
+        • <b>Armado:</b> Usa <b style="color:#00ffcc;">T568B</b> en una punta y <b style="color:#00ffcc;">T568A</b> en la otra.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+)rawliteral";
+
+// --- FUNCIONES HARDWARE ---
+void apagarTonoLimpiamente() {
+  modoActual = 0;
+  webDiagnostico = "En Espera...";
+  ledcWriteTone(0, 0); 
+  ledcDetachPin(txPins[3]); 
+  for (int i = 0; i < 8; i++) {
+    pinMode(txPins[i], OUTPUT);
+    digitalWrite(txPins[i], LOW);
+  }
+}
+
+// --- ENDPOINTS DEL SERVIDOR WEB ---
+void manejarRaiz() { server.send(200, "text/html", paginaWeb); }
+
+void manejarDatos() {
+  String json = "{\"rx_map\":[";
+  for (int i = 0; i < 8; i++) { json += String(webRxMap[i]); if (i < 7) json += ","; }
+  json += "], \"calidad\":[";
+  for (int i = 0; i < 8; i++) { json += String(webCalidad[i]); if (i < 7) json += ","; }
+  json += "], \"modo\": " + String(modoActual) + ", \"paso_actual\": " + String(pasoSecuencia);
+  json += ", \"diagnostico\": \"" + webDiagnostico + "\", \"consejo\": \"" + webConsejo + "\"}";
+  
+  server.send(200, "application/json", json);
+}
+
+void manejarComando() {
+  String accion = server.arg("accion");
+  
+  if (accion == "apagar_tono" || accion == "apagar") {
+    apagarTonoLimpiamente();
+  } 
+  else if (accion == "rapido") {
+    apagarTonoLimpiamente(); modoActual = 1;
+  } 
+  else if (accion == "secuencial") {
+    apagarTonoLimpiamente(); modoActual = 2; pasoSecuencia = 0; ultimoPaso = millis();
+  } 
+  else if (accion == "tono") {
+    apagarTonoLimpiamente();
+    modoActual = 3;
+    tiempoInicioTono = millis();
+    ledcAttachPin(txPins[3], 0); 
+    webDiagnostico = "Emitiendo Tono Sirena...";
+  }
+  server.send(200, "text/plain", "Comando OK");
+}
+
+void manejarReporte() {
+  String csv = "Pin TX,Color,Pin RX Destino,Estado,Calidad Ponchado (%)\n";
+  for (int i = 0; i < 8; i++) {
+    String estado = "OK";
+    if (webRxMap[i] == -1) estado = "ROTO";
+    else if (webRxMap[i] != i) estado = "CRUZADO";
+    csv += String(i+1) + "," + colores[i] + "," + String(webRxMap[i]+1) + "," + estado + "," + String(webCalidad[i]) + "%\n";
+  }
+  server.sendHeader("Content-Disposition", "attachment; filename=\"Certificacion_MexWeb.csv\"");
+  server.send(200, "text/csv", csv);
+}
+
+void setup() {
+  Serial.begin(115200);
+  ledcSetup(0, 1000, 8); 
+
+  for (int i = 0; i < 8; i++) {
+    pinMode(txPins[i], OUTPUT); digitalWrite(txPins[i], LOW);
+    pinMode(rxPins[i], INPUT_PULLDOWN); 
+  }
+  
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { for(;;); }
+  
+  display.clearDisplay(); display.setTextSize(1); display.setTextColor(WHITE);
+  display.setCursor(7, 10); display.println("Tester MexWeb V1.06 AP");
+  display.setCursor(0, 30); display.println("Creando Red WiFi...");
+  display.display();
+  
+  // CONFIGURACIÓN DE MODO PUNTO DE ACCESO (AP)
+  WiFi.softAPConfig(local_IP, gateway, subnet);
+  WiFi.softAP(ssid, password);
+  
+  IPAddress myIP = WiFi.softAPIP();
+
+  display.clearDisplay(); display.setCursor(7, 10); display.println("Tester MexWeb V1.06 AP");
+  display.setCursor(0, 25); display.println("Red Creada OK!"); 
+  display.setCursor(0, 40); display.print("SSID: "); display.println(ssid);
+  display.setCursor(0, 50); display.print("IP:   "); display.println(myIP);
+  
+  server.on("/", manejarRaiz);
+  server.on("/datos", manejarDatos);
+  server.on("/cmd", manejarComando);
+  server.on("/reporte", manejarReporte);
+  server.begin();
+  
+  display.display();
+  delay(4000); 
+}
+
+void loop() {
+  server.handleClient(); 
+  unsigned long tiempoActual = millis();
+
+  // --- MODO 0: ESPERA ---
+  if (modoActual == 0) {
+    webConsejo = "Selecciona un modo de prueba en los botones de abajo.";
+    display.clearDisplay(); display.setTextSize(1); display.setTextColor(WHITE);
+    display.setCursor(1, 0); display.println("TESTER CABLE UTP"); display.drawLine(0, 10, 128, 10, WHITE); 
+    display.setCursor(0, 30); display.println("   [ EN ESPERA ]"); display.setCursor(0, 50); display.println(" Seleccione prueba");
+    display.display(); delay(100); return;
+  }
+
+  // --- MODO 3: TONO SIRENA ---
+  if (modoActual == 3) {
+    webConsejo = "ESTATUS: Sirena activa. Rastrea el cable con el pollo. Pulsa PARO para terminar.";
+    unsigned long tiempoSonando = millis() - tiempoInicioTono;
+    if (tiempoSonando > 30000) { apagarTonoLimpiamente(); } 
+    else {
+      if ((tiempoSonando / 250) % 2 == 0) ledcWriteTone(0, 800); else ledcWriteTone(0, 1000);
+      display.clearDisplay(); display.setCursor(1, 0); display.println("TESTER CABLE UTP"); display.drawLine(0, 10, 128, 10, WHITE); 
+      display.setCursor(15, 30); display.println("EMITIENDO TONO"); display.setCursor(20, 45); display.println("Hilo Azul (Sirena)");
+      display.display(); delay(50);
+    }
+    return;
+  }
+
+  // --- MODO 1 y 2: ESCANEO Y CALIDAD ---
+  int numMalos = 0; bool hayCruce = false;
+  bool estadoParpadeo = ((tiempoActual / 250) % 2) == 0;
+
+  if (modoActual == 1) { // RÁPIDO
+    for (int i = 0; i < 8; i++) {
+      digitalWrite(txPins[i], HIGH);
+      unsigned long t1 = micros();
+      
+      webRxMap[i] = -1; 
+      while(micros() - t1 < 1000) {
+        for (int j = 0; j < 8; j++) { 
+          if (digitalRead(rxPins[j]) == HIGH) { webRxMap[i] = j; break; }
+        }
+        if(webRxMap[i] != -1) break;
+      }
+      unsigned long tiempoViaje = micros() - t1;
+      digitalWrite(txPins[i], LOW);
+      
+      if (webRxMap[i] == -1) webCalidad[i] = 0;
+      else if (tiempoViaje < 25) webCalidad[i] = 100; 
+      else if (tiempoViaje < 100) webCalidad[i] = 90; 
+      else if (tiempoViaje < 500) webCalidad[i] = 70; 
+      else webCalidad[i] = 50; 
+
+      if (webRxMap[i] == -1) numMalos++; else if (webRxMap[i] != i) hayCruce = true;
+    }
+  } 
+  else if (modoActual == 2) { // SECUENCIAL
+    if (tiempoActual - ultimoPaso > 800) { 
+      pasoSecuencia++; if (pasoSecuencia > 7) pasoSecuencia = 0; ultimoPaso = tiempoActual;
+    }
+    
+    digitalWrite(txPins[pasoSecuencia], HIGH);
+    unsigned long t1 = micros();
+    webRxMap[pasoSecuencia] = -1;
+    
+    while(micros() - t1 < 1000) {
+      for (int j = 0; j < 8; j++) { if (digitalRead(rxPins[j]) == HIGH) { webRxMap[pasoSecuencia] = j; break; } }
+      if(webRxMap[pasoSecuencia] != -1) break;
+    }
+    unsigned long tiempoViaje = micros() - t1;
+    digitalWrite(txPins[pasoSecuencia], LOW);
+
+    if (webRxMap[pasoSecuencia] == -1) webCalidad[pasoSecuencia] = 0;
+    else if (tiempoViaje < 25) webCalidad[pasoSecuencia] = 100;
+    else if (tiempoViaje < 100) webCalidad[pasoSecuencia] = 90;
+    else if (tiempoViaje < 500) webCalidad[pasoSecuencia] = 70;
+    else webCalidad[pasoSecuencia] = 50;
+
+    for (int i = 0; i < 8; i++) { if (i != pasoSecuencia) webRxMap[i] = -2; } 
+    if (webRxMap[pasoSecuencia] == -1) numMalos++; else if (webRxMap[pasoSecuencia] != pasoSecuencia) hayCruce = true;
+  }
+
+  // --- GENERADOR DEL CONSEJO/ACCIÓN PARA LA WEB ---
+  webConsejo = "";
+  if (numMalos == 8 && !hayCruce) {
+    webConsejo = "Conecta el cable en ambos puertos (TX y RX) para iniciar el diagnóstico.";
+  } else if (numMalos == 0 && !hayCruce) {
+    webConsejo = "ESTATUS: Transmitiendo 100%. Cable en óptimas condiciones.";
+  } else {
+    webConsejo = "ACCIÓN: REVISAR ";
+    bool primero = true;
+    for (int i=0; i<8; i++) {
+      if (webRxMap[i] == -1 || (webRxMap[i] != i && webRxMap[i] != -2)) {
+        if (!primero) webConsejo += ", ";
+        webConsejo += colores[i];
+        primero = false;
+      }
+    }
+    webConsejo += ".";
+  }
+
+  // --- DIBUJAR PANTALLA OLED ---
+  display.clearDisplay(); display.setTextSize(1); display.setTextColor(WHITE, BLACK); 
+  display.setCursor(1, 0); display.println("TESTER CABLE UTP"); display.drawLine(0, 10, 128, 10, WHITE); 
+
+  display.setCursor(0, 22); display.print("TX: ");
+  for (int i = 0; i < 8; i++) {
+    if ((modoActual == 1 && webRxMap[i] == -1) || (modoActual == 2 && webRxMap[pasoSecuencia] == -1 && i == pasoSecuencia)) {
+      if(estadoParpadeo) display.print("X "); else display.print("  ");
+    } else {
+      if (modoActual == 2 && i == pasoSecuencia) { display.setTextColor(BLACK, WHITE); display.print(i + 1); display.setTextColor(WHITE, BLACK); } 
+      else { display.print(i + 1); }
+      display.print(" ");
+    }
+  }
+
+  display.setCursor(0, 36); display.print("RX: ");
+  for (int j = 0; j < 8; j++) {
+    bool rxRecibe = false;
+    for(int k=0; k<8; k++) { if(webRxMap[k] == j) rxRecibe = true; }
+
+    if ((modoActual == 1 && !rxRecibe) || (modoActual == 2 && webRxMap[pasoSecuencia] == -1 && j == pasoSecuencia)) {
+      if(estadoParpadeo) display.print("X "); else display.print("  ");
+    } else {
+      if (modoActual == 2 && webRxMap[pasoSecuencia] == j) { display.setTextColor(BLACK, WHITE); display.print(j + 1); display.setTextColor(WHITE, BLACK); } 
+      else { display.print(j + 1); }
+      display.print(" ");
+    }
+  }
+
+  display.setCursor(0, 54);
+  if (modoActual == 1) { 
+    if (numMalos == 8) { display.println("Sin cable conectado"); webDiagnostico = "Desconectado"; }
+    else if (numMalos > 0) { display.println("Falla: Cable Roto"); webDiagnostico = "Falla: Cable Roto"; }
+    else if (hayCruce) { display.println("Falla: Cruzado"); webDiagnostico = "Falla: Cruzado"; }
+    else { display.println("Secuencia Correcta"); webDiagnostico = "100% OK"; }
+  } else { 
+    display.print("Checando: "); display.println(colores[pasoSecuencia]);
+    webDiagnostico = "Secuencia Activa";
+  }
+
+  display.display(); delay(15); 
+}
